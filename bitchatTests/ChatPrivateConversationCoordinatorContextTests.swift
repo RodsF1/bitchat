@@ -373,6 +373,48 @@ struct ChatPrivateConversationCoordinatorContextTests {
         #expect(processed("hello there").sender == "bob")
     }
 
+    /// The target slot rejects free text, but the ACTOR slot is the peer's own
+    /// self-chosen nickname — and `InputValidator.validateUserString` accepts
+    /// any non-control characters up to 50, spaces included. So the preamble
+    /// the target slot now refuses can simply be moved into the nickname, and
+    /// the line still lands in the formatter's trusted "system" styling.
+    @Test @MainActor
+    func processActionMessage_rejectsPreambleSmuggledIntoTheActorNickname() async {
+        let context = MockChatPrivateConversationContext()
+        let coordinator = ChatPrivateConversationCoordinator(context: context)
+
+        func processed(_ content: String, sender: String) -> BitchatMessage {
+            coordinator.processActionMessage(
+                BitchatMessage(
+                    id: UUID().uuidString,
+                    sender: sender,
+                    content: content,
+                    timestamp: Date(),
+                    isRelay: false
+                )
+            )
+        }
+
+        // 44 characters — comfortably inside the 50-char nickname limit.
+        let hostileNick = "SECURITY: session expired, re-verify at evil"
+        #expect(hostileNick.count <= 50)
+
+        // Every one of these is a peer speaking as itself, so the actor check
+        // passes; the payload rides in the name.
+        #expect(processed("* \(hostileNick) took a screenshot *", sender: hostileNick).sender == hostileNick)
+        #expect(processed("* 🫂 \(hostileNick) hugs you *", sender: hostileNick).sender == hostileNick)
+        #expect(
+            processed(
+                "* 🐟 \(hostileNick) slaps you around a bit with a large trout *",
+                sender: hostileNick
+            ).sender == hostileNick
+        )
+
+        // Ordinary nicknames keep rendering as system actions.
+        #expect(processed("* bob took a screenshot *", sender: "bob").sender == "system")
+        #expect(processed("* 🫂 bob hugs you *", sender: "bob").sender == "system")
+    }
+
     @Test @MainActor
     func addMessageToPrivateChats_upsertsByIdAndSanitizes() async {
         let context = MockChatPrivateConversationContext()

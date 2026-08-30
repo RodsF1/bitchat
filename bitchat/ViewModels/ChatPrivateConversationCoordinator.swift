@@ -837,6 +837,19 @@ final class ChatPrivateConversationCoordinator {
         // nickname, so a raw-string compare would regress every received
         // geohash action to plain text.
         let senderBase = message.sender.splitSuffix().0
+        // The actor slot needs the same constraint as the target slot, and for
+        // the same reason. Anchoring to the wire sender stops a peer acting as
+        // someone else, but the sender is a *self-chosen nickname* and
+        // `InputValidator.validateUserString` accepts any non-control
+        // characters — spaces included — so the preamble the target slot
+        // rejects can simply be moved into the name:
+        // nickname `SECURITY: session expired, re-verify at evil` sending
+        // `* SECURITY: session expired, re-verify at evil took a screenshot *`
+        // is a peer speaking as itself, and lands in the trusted styling.
+        // A space-containing nickname degrades to a plain message instead.
+        guard Self.isNameToken(senderBase, maxLength: InputValidator.Limits.maxNicknameLength) else {
+            return message
+        }
 
         let isActionMessage =
             Self.matchesActionTemplate(inner, prefix: "🫂 \(senderBase) hugs ", suffix: "")
@@ -877,13 +890,16 @@ final class ChatPrivateConversationCoordinator {
     /// whitespace-free token of bounded length (a nickname, optionally with
     /// a `#abcd` disambiguator). A space-containing nickname degrades to a
     /// plain message rather than trusted styling — the safe direction.
-    static func isNameToken(_ token: String) -> Bool {
-        guard token == "you" else {
-            guard !token.isEmpty, token.count <= 32,
-                  !token.contains(where: { $0.isWhitespace }) else { return false }
-            return true
-        }
-        return true
+    ///
+    /// `maxLength` defaults to the target-slot bound. The actor slot passes the
+    /// full nickname limit, because there the token is the sender's own name
+    /// and truncating legitimate long names would silently stop their actions
+    /// rendering.
+    static func isNameToken(_ token: String, maxLength: Int = 32) -> Bool {
+        if token == "you" { return true }
+        return !token.isEmpty
+            && token.count <= maxLength
+            && !token.contains(where: { $0.isWhitespace })
     }
 
     func migratePrivateChatsIfNeeded(for peerID: PeerID, senderNickname: String) {
