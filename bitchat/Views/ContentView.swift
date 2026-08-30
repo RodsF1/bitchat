@@ -92,6 +92,9 @@ struct ContentView: View {
     @EnvironmentObject private var conversationUIModel: ConversationUIModel
     @EnvironmentObject private var locationChannelsModel: LocationChannelsModel
     @EnvironmentObject private var sharedContentImportModel: SharedContentImportModel
+    @EnvironmentObject private var peerListModel: PeerListModel
+    @EnvironmentObject private var publicChatModel: PublicChatModel
+    @EnvironmentObject private var privateInboxModel: PrivateInboxModel
 
     @StateObject private var voiceRecordingVM = VoiceRecordingViewModel()
     @State private var messageText = ""
@@ -182,7 +185,13 @@ struct ContentView: View {
                       !hasRootModalPresentation else {
                     return
                 }
-                appChromeModel.showBluetoothAlert = false
+                // SwiftUI can invoke this setter inside a view update (the
+                // alert dismisses when a scenePhase change re-evaluates the
+                // `get`); publishing synchronously there is undefined
+                // behavior, so defer the write one hop.
+                Task { @MainActor in
+                    appChromeModel.showBluetoothAlert = false
+                }
             }
         )
     }
@@ -205,7 +214,11 @@ struct ContentView: View {
                       !hasRootModalPresentationBesidesVoiceAlert else {
                     return
                 }
-                voiceRecordingVM.showAlert = false
+                // Same deferral as the Bluetooth alert above: the setter can
+                // run inside a view update when the sheet state changes.
+                Task { @MainActor in
+                    voiceRecordingVM.showAlert = false
+                }
             }
         )
     }
@@ -287,6 +300,17 @@ struct ContentView: View {
                 showImagePicker: $showImagePicker,
                 imagePickerSourceType: $imagePickerSourceType
             )
+            // Sheets + NavigationStack can drop inherited EnvironmentObjects on
+            // some iOS versions (#1558). Re-inject every model the sheet tree
+            // reads so ContentPeopleListView / MessageListView never crash.
+            .environmentObject(appChromeModel)
+            .environmentObject(privateConversationModel)
+            .environmentObject(verificationModel)
+            .environmentObject(conversationUIModel)
+            .environmentObject(locationChannelsModel)
+            .environmentObject(peerListModel)
+            .environmentObject(publicChatModel)
+            .environmentObject(privateInboxModel)
             #else
             ContentPeopleSheetView(
                 showSidebar: $showSidebar,
@@ -304,6 +328,14 @@ struct ContentView: View {
                 onSendMessage: sendMessage,
                 showMacImagePicker: $showMacImagePicker
             )
+            .environmentObject(appChromeModel)
+            .environmentObject(privateConversationModel)
+            .environmentObject(verificationModel)
+            .environmentObject(conversationUIModel)
+            .environmentObject(locationChannelsModel)
+            .environmentObject(peerListModel)
+            .environmentObject(publicChatModel)
+            .environmentObject(privateInboxModel)
             #endif
         }
         .sheet(isPresented: $appChromeModel.isAppInfoPresented) {
@@ -365,7 +397,7 @@ struct ContentView: View {
                 ImagePreviewView(url: url)
             }
         }
-        .alert("Recording Error", isPresented: rootVoiceAlertBinding, actions: {
+        .alert(Text(String(localized: "voice.error.title", defaultValue: "recording error", comment: "Title of the voice recording error alert")), isPresented: rootVoiceAlertBinding, actions: {
             Button("common.ok", role: .cancel) {}
             if voiceRecordingVM.state == .permissionDenied {
                 Button("location_channels.action.open_settings") {
@@ -377,7 +409,10 @@ struct ContentView: View {
         })
         .alert("content.alert.bluetooth_required.title", isPresented: rootBluetoothAlertBinding) {
             Button("content.alert.bluetooth_required.settings") {
-                SystemSettings.bluetooth.open()
+                // Powered-off needs the radio controls, not the privacy pane.
+                (appChromeModel.bluetoothState == .poweredOff
+                    ? SystemSettings.bluetoothPower
+                    : SystemSettings.bluetooth).open()
             }
             Button("common.ok", role: .cancel) {}
         } message: {
@@ -457,14 +492,47 @@ struct ContentView: View {
     }
 
     private var headerView: some View {
-        ContentHeaderView(
-            showSidebar: $showSidebar,
-            showVerifySheet: $showVerifySheet,
-            isNicknameFieldFocused: $isNicknameFieldFocused,
-            headerHeight: headerHeight,
-            headerPeerIconSize: headerPeerIconSize,
-            headerPeerCountFontSize: headerPeerCountFontSize
-        )
+        VStack(spacing: 0) {
+            ContentHeaderView(
+                showSidebar: $showSidebar,
+                showVerifySheet: $showVerifySheet,
+                isNicknameFieldFocused: $isNicknameFieldFocused,
+                headerHeight: headerHeight,
+                headerPeerIconSize: headerPeerIconSize,
+                headerPeerCountFontSize: headerPeerCountFontSize
+            )
+
+            // Failed-wipe outranks connectivity: "your data may still be
+            // here" matters more than "the radio is off".
+            if appChromeModel.panicWipeBlocked {
+                PanicWipeBlockedBanner()
+            }
+
+            if let issue = ConnectivityIssue.resolve(
+                bluetoothState: appChromeModel.bluetoothState,
+                torBlocked: appChromeModel.torBlocked
+            ) {
+                ConnectivityStatusBanner(issue: issue)
+            }
+        }
+        // Hosted here rather than on the logo Text so the pending dialog
+        // survives whatever happens to the header chrome.
+        .confirmationDialog(
+            Text(
+                String(localized: "app_info.settings.danger.panic_confirm_title", defaultValue: "wipe all data?", comment: "Title of the confirmation dialog before a panic wipe")
+            ),
+            isPresented: $appChromeModel.showPanicConfirmation,
+            titleVisibility: .visible
+        ) {
+            Button(role: .destructive) {
+                appChromeModel.panicClearAllData()
+            } label: {
+                Text(
+                    String(localized: "app_info.settings.danger.panic_confirm_action", defaultValue: "wipe everything", comment: "Destructive confirmation button that performs the panic wipe")
+                )
+            }
+            Button("common.cancel", role: .cancel) {}
+        }
     }
 
     private var publicMessageList: some View {
