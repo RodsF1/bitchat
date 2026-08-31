@@ -471,6 +471,74 @@ struct ChatViewModelServiceLifecycleTests {
         #expect(viewModel.privateChatManager.sentReadReceipts.contains("read-2"))
     }
 
+    /// Regression for the two-set asymmetry: a message read while viewing a
+    /// chat with receipts OFF is withheld on the *coordinator* path (which
+    /// records only the view-model set). `PrivateChatManager.markAsRead`
+    /// re-scans on every chat open and dedups against its OWN set, so before
+    /// the fix, re-enabling the setting and reopening the chat fired a receipt
+    /// for that already-read message — a delayed disclosure of reading done
+    /// while the setting was off. Drives the real inbound delegate path, not
+    /// the manager-withhold path the test above covers.
+    @Test @MainActor
+    func readReceiptNotResentWhenReenablingAfterMessageReadWhileViewing() async {
+        let (viewModel, transport) = makeTestableViewModel()
+        viewModel.sendsReadReceipts = { false }
+        viewModel.privateChatManager.sendsReadReceipts = { false }
+        let peerID = PeerID(str: "0000000000000042")
+        transport.simulateConnect(peerID, nickname: "Alice")
+        viewModel.selectedPrivateChatPeer = peerID   // viewing
+
+        let message = BitchatMessage(
+            id: "read-viewing",
+            sender: "Alice",
+            content: "read while receipts were off",
+            timestamp: Date(),
+            isRelay: false,
+            originalSender: nil,
+            isPrivate: true,
+            recipientNickname: viewModel.nickname,
+            senderPeerID: peerID,
+            mentions: nil
+        )
+        // Real inbound path -> didReceiveMessage -> handlePrivateMessage
+        // (isViewing branch): withholds the mesh receipt and records the id.
+        transport.simulateIncomingMessage(message)
+
+        // Confirm the coordinator path actually ran (id recorded) and nothing
+        // left the device while the setting was OFF.
+        #expect(await TestHelpers.waitUntil({
+            viewModel.sentReadReceipts.contains("read-viewing")
+        }, timeout: TestConstants.settleTimeout))
+        #expect(!transport.sentReadReceipts.contains { $0.receipt.originalMessageID == "read-viewing" })
+
+        // Re-enable, leave, and reopen the chat: startChat -> markAsRead
+        // re-scans. The message must NOT be resent.
+        viewModel.selectedPrivateChatPeer = nil
+        viewModel.sendsReadReceipts = { true }
+        viewModel.privateChatManager.sendsReadReceipts = { true }
+        viewModel.selectedPrivateChatPeer = peerID   // reopen
+
+        let leaked = await TestHelpers.waitUntil({
+            transport.sentReadReceipts.contains { $0.receipt.originalMessageID == "read-viewing" }
+        }, timeout: TestConstants.negativeWaitWindow)
+        #expect(!leaked)
+    }
+
+    /// Guards the second half of the fix: `unmarkReadReceiptsSent` must clear
+    /// BOTH sets, or the reconnect re-send it exists to enable would be
+    /// silently defeated (markAsRead guards on the manager set).
+    @Test @MainActor
+    func unmarkReadReceiptsSentClearsBothSets() {
+        let (viewModel, _) = makeTestableViewModel()
+        viewModel.markReadReceiptSent("m-1")
+        #expect(viewModel.sentReadReceipts.contains("m-1"))
+        #expect(viewModel.privateChatManager.sentReadReceipts.contains("m-1"))
+
+        viewModel.unmarkReadReceiptsSent(["m-1"])
+        #expect(!viewModel.sentReadReceipts.contains("m-1"))
+        #expect(!viewModel.privateChatManager.sentReadReceipts.contains("m-1"))
+    }
+
     @Test @MainActor
     func readReceiptSettingDefaultsToOnAndResets() {
         let suite = "ReadReceiptSettingsTests.\(UUID().uuidString)"
