@@ -541,16 +541,20 @@ final class CommandProcessor {
         // The first favorite is consent-gated on the ADD path: adding notifies
         // the peer immediately and shares your durable Nostr key. The star UI
         // shows a one-time dialog for this; a slash command has no view to
-        // present it, so require an explicit `!confirm` token the first time.
-        // Order-independent, add-only (removals stay immediate, matching the UI).
+        // present it, so require an explicit trailing `!confirm` the first time.
+        // Parse it as a trailing flag rather than tokenizing the name
+        // (@Chessing234 on #1702): the rest of the line is the nickname, so a
+        // name with spaces survives intact. Add-only; removals stay immediate.
         var targetName = args.trimmed
         var confirmed = false
         if add {
-            var tokens = targetName.split(separator: " ", omittingEmptySubsequences: true).map(String.init)
-            if let idx = tokens.firstIndex(of: "!confirm") {
+            let flag = "!confirm"
+            if targetName == flag {
                 confirmed = true
-                tokens.remove(at: idx)
-                targetName = tokens.joined(separator: " ")
+                targetName = ""
+            } else if targetName.hasSuffix(" \(flag)") {
+                confirmed = true
+                targetName = String(targetName.dropLast(flag.count + 1)).trimmed
             }
         }
 

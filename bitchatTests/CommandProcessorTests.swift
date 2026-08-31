@@ -401,6 +401,71 @@ struct CommandProcessorTests {
         #expect(FavoriteConsent.isAcknowledged)
     }
 
+    /// A nickname with spaces must survive the consent round-trip: the flag is
+    /// parsed as a trailing token, not by tokenizing the whole name.
+    @MainActor
+    @Test func favoriteCommandConsentPreservesMultiWordNickname() async {
+        FavoriteConsent.reset()
+        defer { FavoriteConsent.reset() }
+        let identityManager = MockIdentityManager(MockKeychain())
+        let context = MockCommandContextProvider()
+        let processor = CommandProcessor(
+            contextProvider: context,
+            meshService: MockTransport(),
+            identityManager: identityManager
+        )
+        let peerID = PeerID(str: "00aa00bb00cc00dd")
+        context.nicknameToPeerID["jane doe"] = peerID
+
+        // Unconfirmed: the whole spaced name resolves, and the hint echoes it.
+        let gated = await withSelectedChannel(.mesh, context: context) {
+            processor.process("/fav jane doe")
+        }
+        switch gated {
+        case .error(let message):
+            #expect(message.contains("/fav jane doe !confirm"))
+        default:
+            Issue.record("Expected disclosure for a multi-word name, got \(gated)")
+        }
+        #expect(context.toggledFavorites.isEmpty)
+
+        // Confirmed: the trailing flag is stripped and "jane doe" resolves.
+        let confirmed = await withSelectedChannel(.mesh, context: context) {
+            processor.process("/fav jane doe !confirm")
+        }
+        switch confirmed {
+        case .success(let message):
+            #expect(message == "added jane doe to favorites")
+        default:
+            Issue.record("Expected success for a multi-word name, got \(confirmed)")
+        }
+        #expect(context.toggledFavorites == [peerID])
+    }
+
+    /// `!confirm` is honored only as a trailing flag, not stripped from
+    /// anywhere in the line — otherwise `/fav !confirm alice` would wrongly
+    /// count as consent for alice. Here "!confirm alice" is just an unknown
+    /// name: no toggle, and consent is not recorded.
+    @MainActor
+    @Test func favoriteCommandConsentHonorsOnlyTrailingConfirm() async {
+        FavoriteConsent.reset()
+        defer { FavoriteConsent.reset() }
+        let identityManager = MockIdentityManager(MockKeychain())
+        let context = MockCommandContextProvider()
+        let processor = CommandProcessor(
+            contextProvider: context,
+            meshService: MockTransport(),
+            identityManager: identityManager
+        )
+        context.nicknameToPeerID["alice"] = PeerID(str: "00aa00bb00cc00dd")
+
+        _ = await withSelectedChannel(.mesh, context: context) {
+            processor.process("/fav !confirm alice")
+        }
+        #expect(context.toggledFavorites.isEmpty)
+        #expect(!FavoriteConsent.isAcknowledged)
+    }
+
     @MainActor
     @Test func favoriteCommandIsRejectedOutsideMesh() async {
         let identityManager = MockIdentityManager(MockKeychain())
