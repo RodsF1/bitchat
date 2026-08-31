@@ -413,6 +413,17 @@ struct ChatPrivateConversationCoordinatorContextTests {
         // Ordinary nicknames keep rendering as system actions.
         #expect(processed("* bob took a screenshot *", sender: "bob").sender == "system")
         #expect(processed("* 🫂 bob hugs you *", sender: "bob").sender == "system")
+
+        // The reason the actor bound is the nickname limit and not the target
+        // slot's 32: a legitimate, space-free nickname longer than 32 must
+        // STILL render as a system action. If this bound is ever "simplified"
+        // back to 32, these regress to plain text under the peer's own name and
+        // their hugs/slaps/screenshots silently stop rendering as actions.
+        let longLegitNick = String(repeating: "a", count: 40)  // > 32, ≤ 50, no spaces
+        #expect(longLegitNick.count > 32 && longLegitNick.count <= InputValidator.Limits.maxNicknameLength)
+        #expect(processed("* \(longLegitNick) took a screenshot *", sender: longLegitNick).sender == "system")
+        #expect(processed("* 🫂 \(longLegitNick) hugs you *", sender: longLegitNick).sender == "system")
+        #expect(processed("* 🐟 \(longLegitNick) slaps you around a bit with a large trout *", sender: longLegitNick).sender == "system")
     }
 
     @Test @MainActor
