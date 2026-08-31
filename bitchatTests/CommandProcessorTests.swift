@@ -310,6 +310,10 @@ struct CommandProcessorTests {
     /// send a second favorite notification.
     @MainActor
     @Test func favoriteCommandTogglesWithoutDirectStoreWrite() async {
+        // This test is about the store-write / no-double-notify behaviour, not
+        // the consent gate; pre-acknowledge so plain /fav toggles immediately.
+        FavoriteConsent.acknowledge()
+        defer { FavoriteConsent.reset() }
         let identityManager = MockIdentityManager(MockKeychain())
         let context = MockCommandContextProvider()
         let processor = CommandProcessor(
@@ -347,6 +351,54 @@ struct CommandProcessorTests {
             Issue.record("Expected success result")
         }
         #expect(context.toggledFavorites == [peerID])
+    }
+
+    /// Regression: /fav must not favorite (persist the linkage + notify the
+    /// peer) before the user has seen the disclosure. On a fresh, unacknowledged
+    /// state a plain /fav returns the disclosure and toggles nothing; only the
+    /// explicit !confirm form proceeds, and it records consent so the star UI
+    /// never re-asks.
+    @MainActor
+    @Test func favoriteCommandRequiresConsentBeforeFirstFavorite() async {
+        FavoriteConsent.reset()                 // fresh, unacknowledged
+        defer { FavoriteConsent.reset() }
+        let identityManager = MockIdentityManager(MockKeychain())
+        let context = MockCommandContextProvider()
+        let processor = CommandProcessor(
+            contextProvider: context,
+            meshService: MockTransport(),
+            identityManager: identityManager
+        )
+        let peerID = PeerID(str: "00aa00bb00cc00dd")
+        context.nicknameToPeerID["alice"] = peerID
+
+        // Plain /fav on an unacknowledged state: disclosure, no toggle, no notify.
+        let gated = await withSelectedChannel(.mesh, context: context) {
+            processor.process("/fav alice")
+        }
+        switch gated {
+        case .error(let message):
+            #expect(message.contains("shares your nostr key"))
+            #expect(message.contains("/fav alice !confirm"))
+        default:
+            Issue.record("Expected the consent disclosure, got \(gated)")
+        }
+        #expect(context.toggledFavorites.isEmpty)
+        #expect(context.favoriteNotifications.isEmpty)
+        #expect(!FavoriteConsent.isAcknowledged)
+
+        // Explicit confirmation: toggles, and records consent going forward.
+        let confirmed = await withSelectedChannel(.mesh, context: context) {
+            processor.process("/fav alice !confirm")
+        }
+        switch confirmed {
+        case .success(let message):
+            #expect(message == "added alice to favorites")
+        default:
+            Issue.record("Expected success after !confirm, got \(confirmed)")
+        }
+        #expect(context.toggledFavorites == [peerID])
+        #expect(FavoriteConsent.isAcknowledged)
     }
 
     @MainActor
