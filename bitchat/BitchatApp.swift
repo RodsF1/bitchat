@@ -65,11 +65,14 @@ struct BitchatApp: App {
                 }
                 #endif
 
-                // The gate renders above everything: with the lock engaged
-                // the timelines below must be neither readable nor tappable.
-                // iOS re-locks on background (below); macOS locks at launch
-                // only — its windows resign focus constantly, and the
-                // existing PrivacyScreen already covers window snapshots.
+                // Launch/underlay cover, drawn in the SwiftUI tree with no
+                // flash at cold launch (where no modal is ever open) and the
+                // sole lock surface on macOS. On iOS it does NOT cover a
+                // .sheet/.fullScreenCover that was open when the app
+                // backgrounded and re-locked — those are UIKit modals above
+                // the SwiftUI root — so a dedicated window handles that case
+                // (below). iOS re-locks on background; macOS locks at launch
+                // only, and PrivacyScreen already covers window snapshots.
                 if appLock.isLocked {
                     AppLockScreen(model: appLock)
                         .environment(\.appTheme, AppTheme(rawValue: appThemeRawValue) ?? .matrix)
@@ -80,6 +83,17 @@ struct BitchatApp: App {
                 if newPhase == .background {
                     appLock.lockIfEnabled()
                 }
+            }
+            // A dedicated window above the modal layer covers a sheet/cover
+            // that was open at background time. Fires on the false→true
+            // background re-lock (cold launch keeps the true value, so no
+            // window there — the sibling above suffices with no modal open).
+            .onChange(of: appLock.isLocked) { locked in
+                AppLockWindow.shared.setLocked(
+                    locked,
+                    model: appLock,
+                    appTheme: AppTheme(rawValue: appThemeRawValue) ?? .matrix
+                )
             }
             #endif
         }
