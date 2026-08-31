@@ -541,7 +541,7 @@ final class ChatViewModel: ObservableObject, BitchatDelegate, SynchronousMessage
         // fire after the read-receipt setting is toggled back on. Keep both
         // sets in lockstep; the existing markReceiptHandled bridge covers the
         // reverse (manager -> here) direction.
-        privateChatManager.sentReadReceipts.insert(messageID)
+        privateChatManager.recordReadReceiptSent(messageID)
         return sentReadReceipts.insert(messageID).inserted
     }
 
@@ -561,7 +561,7 @@ final class ChatViewModel: ObservableObject, BitchatDelegate, SynchronousMessage
         // Must reach the manager set too: markAsRead's re-send-after-reconnect
         // path guards on the manager set, so leaving ids stuck there would
         // silently defeat the reconnect re-send this method exists to enable.
-        privateChatManager.sentReadReceipts.subtract(ids)
+        privateChatManager.forgetReadReceiptsSent(ids)
     }
 
     /// Marks read receipts as sent for own messages already delivered/read in
@@ -1705,7 +1705,7 @@ final class ChatViewModel: ObservableObject, BitchatDelegate, SynchronousMessage
 
         // Clear read receipt tracking
         sentReadReceipts.removeAll()
-        privateChatManager.sentReadReceipts.removeAll()
+        privateChatManager.clearReadReceiptsSent()
         deduplicationService.clearAll()
 
         // IMPORTANT: Clear Nostr-related state

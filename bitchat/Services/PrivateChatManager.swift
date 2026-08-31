@@ -28,7 +28,11 @@ final class PrivateChatManager: ObservableObject {
     @Published private(set) var selectedPeer: PeerID? = nil
     private var selectedPeerMirrorCancellable: AnyCancellable? = nil
 
-    var sentReadReceipts: Set<String> = []  // Made accessible for ChatViewModel
+    // Readable by ChatViewModel; mutated only here or through the record/
+    // forget/clear API below. Direct external writes are how the view-model
+    // and this manager's sets fell out of lockstep in the first place, so the
+    // setter is closed off.
+    private(set) var sentReadReceipts: Set<String> = []
 
     weak var meshService: Transport?
     // Route acks/receipts via MessageRouter (chooses mesh or Nostr)
@@ -257,6 +261,27 @@ final class PrivateChatManager: ObservableObject {
     /// not this manager's set, so claiming only locally would let a receipt
     /// for a message read while the setting was OFF fire after re-enabling.
     var markReceiptHandled: ((String) -> Void)?
+
+    // MARK: - Read-receipt sent-set (shared with ChatViewModel)
+
+    /// Record a read receipt as sent/handled. ChatViewModel mirrors its own
+    /// records here so `markAsRead`'s chat-open re-scan (which dedups against
+    /// this set) sees receipts withheld or sent on the coordinator path.
+    func recordReadReceiptSent(_ messageID: String) {
+        sentReadReceipts.insert(messageID)
+    }
+
+    /// Forget sent receipts so they can be re-sent after the peer reconnects.
+    /// `markAsRead` guards on this set, so the view-model's `unmark` must reach
+    /// it or the reconnect re-send never fires.
+    func forgetReadReceiptsSent(_ ids: [String]) {
+        sentReadReceipts.subtract(ids)
+    }
+
+    /// Drop all sent-receipt tracking (panic/wipe).
+    func clearReadReceiptsSent() {
+        sentReadReceipts.removeAll()
+    }
 
     private func sendReadReceipt(for message: BitchatMessage) {
         guard !sentReadReceipts.contains(message.id),
