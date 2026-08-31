@@ -373,6 +373,44 @@ struct ChatPrivateConversationCoordinatorContextTests {
         #expect(processed("hello there").sender == "bob")
     }
 
+    /// A name token is whitespace-free and bounded, but it still renders inside
+    /// the trusted `system` line — so a URL in a slot becomes a tappable link
+    /// under system styling (@Chessing234 on #1662/#1699), and a unicode
+    /// separator / bidi mark reorders the visible text. Both must degrade to a
+    /// plain message under the sender's own name.
+    @Test @MainActor
+    func processActionMessage_rejectsLinkAndSeparatorPayloadsInSlots() async {
+        let context = MockChatPrivateConversationContext()
+        let coordinator = ChatPrivateConversationCoordinator(context: context)
+
+        func processed(_ content: String, sender: String = "bob") -> BitchatMessage {
+            coordinator.processActionMessage(
+                BitchatMessage(id: UUID().uuidString, sender: sender, content: content,
+                               timestamp: Date(), isRelay: false)
+            )
+        }
+
+        // URL in the target slot — the whole point of the actor-anchoring
+        // example, but as a tappable link rather than a preamble.
+        #expect(processed("* 🫂 bob hugs https://evil.tld *").sender == "bob")
+        // The www. variant has no ":" or "/", so a naive charset check misses
+        // it; the formatter linkifies it via the "www." hint just the same.
+        #expect(processed("* 🫂 bob hugs www.evil.tld *").sender == "bob")
+        #expect(processed("* bob took a screenshot http://evil.tld *", sender: "bob").sender == "bob")
+        // URL smuggled through the ACTOR nickname too.
+        #expect(processed("* https://evil.tld took a screenshot *", sender: "https://evil.tld").sender == "https://evil.tld")
+        // Unicode bidi mark (U+202E right-to-left override) in the slot.
+        #expect(processed("* 🫂 bob hugs a\u{202E}b *").sender == "bob")
+        // Non-breaking space (U+00A0) — not Swift `isWhitespace`-caught by the
+        // old check, but a separator all the same.
+        #expect(processed("* 🫂 bob hugs a\u{00A0}b *").sender == "bob")
+
+        // Legitimate shapes still render as system actions.
+        #expect(processed("* 🫂 bob hugs alice *").sender == "system")
+        #expect(processed("* 🫂 bob hugs alice#1a2b *").sender == "system")
+        #expect(processed("* bob took a screenshot *").sender == "system")
+    }
+
     /// The target slot rejects free text, but the ACTOR slot is the peer's own
     /// self-chosen nickname — and `InputValidator.validateUserString` accepts
     /// any non-control characters up to 50, spaces included. So the preamble

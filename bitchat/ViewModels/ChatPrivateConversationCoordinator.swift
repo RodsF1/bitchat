@@ -887,19 +887,40 @@ final class ChatPrivateConversationCoordinator {
     }
 
     /// A display name as it appears in action content: "you", or a single
-    /// whitespace-free token of bounded length (a nickname, optionally with
-    /// a `#abcd` disambiguator). A space-containing nickname degrades to a
-    /// plain message rather than trusted styling — the safe direction.
+    /// bounded token in the conservative shape handleEmote actually emits (a
+    /// resolved nickname, optionally with a `#abcd` disambiguator). Anything
+    /// else degrades to a plain message rather than trusted styling — the safe
+    /// direction.
     ///
     /// `maxLength` defaults to the target-slot bound. The actor slot passes the
     /// full nickname limit, because there the token is the sender's own name
     /// and truncating legitimate long names would silently stop their actions
     /// rendering.
+    ///
+    /// "No Swift whitespace" is not enough (thanks @Chessing234): the token is
+    /// still rendered inside the trusted `system` line, where a unicode
+    /// separator or bidi mark reorders visible text, and where the formatter
+    /// turns a URL into a tappable link. So reject two classes:
+    ///
+    /// 1. Unicode whitespace and separators, plus control/format characters
+    ///    (bidi marks, zero-width joiners) — a plain "no Swift whitespace"
+    ///    check misses these.
+    /// 2. Anything the formatter would linkify. Its gate is exactly
+    ///    `contains("://") || contains("www.") || contains("http")`
+    ///    (ChatMessageFormatter), so `https://evil.tld` *and* `www.evil.tld`
+    ///    both slip a tappable link into the trusted line. Match that gate.
+    ///
+    /// A real action still renders — handleEmote only ever emits a resolved
+    /// nickname (optionally `#abcd`-suffixed, left intact) or "you", none of
+    /// which trip either class. An attacker's URL/bidi payload falls through
+    /// to a plain message under the sender's own name.
     static func isNameToken(_ token: String, maxLength: Int = 32) -> Bool {
         if token == "you" { return true }
-        return !token.isEmpty
-            && token.count <= maxLength
-            && !token.contains(where: { $0.isWhitespace })
+        guard !token.isEmpty, token.count <= maxLength else { return false }
+        let separators = CharacterSet.whitespacesAndNewlines.union(.controlCharacters)
+        guard token.unicodeScalars.allSatisfy({ !separators.contains($0) }) else { return false }
+        let lower = token.lowercased()
+        return !lower.contains("://") && !lower.contains("www.") && !lower.contains("http")
     }
 
     func migratePrivateChatsIfNeeded(for peerID: PeerID, senderNickname: String) {
