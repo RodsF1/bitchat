@@ -65,35 +65,41 @@ struct BitchatApp: App {
                 }
                 #endif
 
-                // Launch/underlay cover, drawn in the SwiftUI tree with no
-                // flash at cold launch (where no modal is ever open) and the
-                // sole lock surface on macOS. On iOS it does NOT cover a
-                // .sheet/.fullScreenCover that was open when the app
-                // backgrounded and re-locked — those are UIKit modals above
-                // the SwiftUI root — so a dedicated window handles that case
-                // (below). iOS re-locks on background; macOS locks at launch
-                // only, and PrivacyScreen already covers window snapshots.
+                // The macOS lock surface, and the only one there: no
+                // UIWindow path, and macOS locks at launch only, so no
+                // AppKit sheet is ever already open over it. On iOS the
+                // gate is hosted solely by AppLockWindow (below): a cover
+                // drawn here sits under the UIKit modal layer, so a
+                // .sheet/.fullScreenCover would show through it.
+                #if os(macOS)
                 if appLock.isLocked {
                     AppLockScreen(model: appLock)
                         .environment(\.appTheme, AppTheme(rawValue: appThemeRawValue) ?? .matrix)
                 }
+                #endif
             }
             #if os(iOS)
             .onChange(of: scenePhase) { newPhase in
                 if newPhase == .background {
                     appLock.lockIfEnabled()
                 }
+                // Retry: `setLocked` gives up when no window scene is
+                // connected yet, and since iOS no longer draws an in-tree
+                // cover, a creation missed at subscription time would leave
+                // the app ungated with nothing to trigger a second attempt.
+                // A scene is certainly connected by the time a phase change
+                // arrives. Reading the property is correct here — @Published
+                // fires in willSet, so only the closure below sees the new
+                // value early.
+                syncAppLockWindow(appLock.isLocked)
             }
-            // A dedicated window above the modal layer covers a sheet/cover
-            // that was open at background time. Fires on the false→true
-            // background re-lock (cold launch keeps the true value, so no
-            // window there — the sibling above suffices with no modal open).
-            .onChange(of: appLock.isLocked) { locked in
-                AppLockWindow.shared.setLocked(
-                    locked,
-                    model: appLock,
-                    appTheme: AppTheme(rawValue: appThemeRawValue) ?? .matrix
-                )
+            // The lock's only host on iOS: a dedicated window above the
+            // modal layer. Subscribed rather than .onChange so the launch
+            // value arrives too — a cold launch is already locked and never
+            // transitions, yet a notification tap can select a conversation
+            // and present a sheet over the lock.
+            .onReceive(appLock.$isLocked) { locked in
+                syncAppLockWindow(locked)
             }
             #endif
         }
@@ -102,6 +108,20 @@ struct BitchatApp: App {
         .windowResizability(.contentSize)
         #endif
     }
+
+    #if os(iOS)
+    /// Brings the lock window in line with `locked`. Idempotent: `setLocked`
+    /// no-ops when a window already exists, so the several places that call
+    /// this can overlap freely.
+    @MainActor
+    private func syncAppLockWindow(_ locked: Bool) {
+        AppLockWindow.shared.setLocked(
+            locked,
+            model: appLock,
+            appTheme: AppTheme(rawValue: appThemeRawValue) ?? .matrix
+        )
+    }
+    #endif
 }
 
 #if os(iOS)

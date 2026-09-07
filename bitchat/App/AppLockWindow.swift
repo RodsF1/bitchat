@@ -11,21 +11,21 @@ import SwiftUI
 import UIKit
 
 /// Hosts the app-lock gate in a dedicated `UIWindow` above the main window's
-/// entire presentation stack.
+/// entire presentation stack. On iOS this is the gate's only host — macOS,
+/// which has no `UIWindow` path, keeps the ZStack sibling in `BitchatApp`.
 ///
-/// The gate is also rendered as a ZStack sibling of `ContentView` (see
-/// `BitchatApp`), which covers the cold-launch case with no flash. But a
-/// `.sheet` / `.fullScreenCover` presented from `ContentView` is a UIKit modal
-/// above the SwiftUI root, so the sibling cannot cover a modal that was open
-/// when the app went to the background and re-locked — settings (relay names,
-/// the panic-wipe button), the QR sheet, location channels, etc. would sit on
-/// top of the lock on return. A separate window at `.alert + 1` is the only
-/// surface guaranteed to sit above that modal layer.
+/// A `.sheet` / `.fullScreenCover` presented from `ContentView` is a UIKit
+/// modal above the SwiftUI root, so a gate drawn inside the SwiftUI tree
+/// cannot cover one — settings (relay names, the panic-wipe button), the QR
+/// sheet, location channels, etc. would sit on top of the lock. A separate
+/// window at `.alert + 1` is the only surface guaranteed to sit above that
+/// modal layer.
 ///
 /// Driven from SwiftUI by `AppLockModel.isLocked` so the model stays UIKit-free
-/// and testable; the window is created on the false→true transition (the
-/// background re-lock, the only time a modal can already be open) and torn down
-/// on unlock. Mirrors the window-lifecycle approach of `PrivacyScreen`.
+/// and testable; the window is created whenever the app is locked — including
+/// at launch, since tapping a private-message notification selects the
+/// conversation and presents the people sheet over the launch lock — and torn
+/// down on unlock. Mirrors the window-lifecycle approach of `PrivacyScreen`.
 @MainActor
 final class AppLockWindow {
     static let shared = AppLockWindow()
