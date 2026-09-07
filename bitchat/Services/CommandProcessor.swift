@@ -549,12 +549,26 @@ final class CommandProcessor {
         var confirmed = false
         if add {
             let flag = "!confirm"
-            if targetName == flag {
-                confirmed = true
-                targetName = ""
-            } else if targetName.hasSuffix(" \(flag)") {
-                confirmed = true
-                targetName = String(targetName.dropLast(flag.count + 1)).trimmed
+            // An exact name beats the flag: if the whole line already names a
+            // peer — someone nicknamed "alice !confirm" — keep it whole and
+            // show them the disclosure. Reading their name as consent would
+            // skip the disclosure and hand the durable key to whatever
+            // "alice" resolves to, a different person; refusing to read it
+            // costs at most one more confirmation step, so that is the safe
+            // way to be wrong. They confirm with "/fav alice !confirm !confirm".
+            let givenName = targetName.hasPrefix("@") ? String(targetName.dropFirst()) : targetName
+            let namesAPeer = contextProvider?.getPeerIDForNickname(givenName) != nil
+            if !namesAPeer {
+                // The flag is matched case-insensitively; the nickname is not.
+                if targetName.lowercased() == flag {
+                    confirmed = true
+                    targetName = ""
+                } else if targetName.count > flag.count,
+                          targetName.suffix(flag.count).lowercased() == flag,
+                          targetName.dropLast(flag.count).hasSuffix(" ") {
+                    confirmed = true
+                    targetName = String(targetName.dropLast(flag.count + 1)).trimmed
+                }
             }
         }
 

@@ -466,6 +466,97 @@ struct CommandProcessorTests {
         #expect(!FavoriteConsent.isAcknowledged)
     }
 
+    /// A peer literally named "alice !confirm" alongside a peer named "alice"
+    /// — the case Codex raised on #1702: /fav on the first must not be read as
+    /// consent for the second. The name wins, so the disclosure is shown,
+    /// nothing is toggled and consent is not recorded.
+    @MainActor
+    @Test func favoriteCommandTreatsExactNameAsNameNotConfirmFlag() async {
+        FavoriteConsent.reset()
+        defer { FavoriteConsent.reset() }
+        let identityManager = MockIdentityManager(MockKeychain())
+        let context = MockCommandContextProvider()
+        let processor = CommandProcessor(
+            contextProvider: context,
+            meshService: MockTransport(),
+            identityManager: identityManager
+        )
+        context.nicknameToPeerID["alice !confirm"] = PeerID(str: "00aa00bb00cc00dd")
+        context.nicknameToPeerID["alice"] = PeerID(str: "11aa11bb11cc11dd")
+
+        let gated = await withSelectedChannel(.mesh, context: context) {
+            processor.process("/fav alice !confirm")
+        }
+        switch gated {
+        case .error(let message):
+            #expect(message.contains("shares your nostr key"))
+            #expect(message.contains("/fav alice !confirm !confirm"))
+        default:
+            Issue.record("Expected the disclosure for the peer named 'alice !confirm', got \(gated)")
+        }
+        #expect(context.toggledFavorites.isEmpty)
+        #expect(context.favoriteNotifications.isEmpty)
+        #expect(!FavoriteConsent.isAcknowledged)
+    }
+
+    /// The hint from that disclosure round-trips: the trailing flag is stripped
+    /// once and "alice !confirm" — not "alice" — is favorited.
+    @MainActor
+    @Test func favoriteCommandConfirmsPeerNamedLikeTheFlag() async {
+        FavoriteConsent.reset()
+        defer { FavoriteConsent.reset() }
+        let identityManager = MockIdentityManager(MockKeychain())
+        let context = MockCommandContextProvider()
+        let processor = CommandProcessor(
+            contextProvider: context,
+            meshService: MockTransport(),
+            identityManager: identityManager
+        )
+        let confusingPeerID = PeerID(str: "00aa00bb00cc00dd")
+        context.nicknameToPeerID["alice !confirm"] = confusingPeerID
+        context.nicknameToPeerID["alice"] = PeerID(str: "11aa11bb11cc11dd")
+
+        let confirmed = await withSelectedChannel(.mesh, context: context) {
+            processor.process("/fav alice !confirm !confirm")
+        }
+        switch confirmed {
+        case .success(let message):
+            #expect(message == "added alice !confirm to favorites")
+        default:
+            Issue.record("Expected success for the peer named 'alice !confirm', got \(confirmed)")
+        }
+        #expect(context.toggledFavorites == [confusingPeerID])
+        #expect(FavoriteConsent.isAcknowledged)
+    }
+
+    /// The flag is matched case-insensitively; the nickname is not touched.
+    @MainActor
+    @Test func favoriteCommandAcceptsUppercaseConfirmFlag() async {
+        FavoriteConsent.reset()
+        defer { FavoriteConsent.reset() }
+        let identityManager = MockIdentityManager(MockKeychain())
+        let context = MockCommandContextProvider()
+        let processor = CommandProcessor(
+            contextProvider: context,
+            meshService: MockTransport(),
+            identityManager: identityManager
+        )
+        let peerID = PeerID(str: "00aa00bb00cc00dd")
+        context.nicknameToPeerID["Alice"] = peerID
+
+        let confirmed = await withSelectedChannel(.mesh, context: context) {
+            processor.process("/fav Alice !CONFIRM")
+        }
+        switch confirmed {
+        case .success(let message):
+            #expect(message == "added Alice to favorites")
+        default:
+            Issue.record("Expected success for an uppercase flag, got \(confirmed)")
+        }
+        #expect(context.toggledFavorites == [peerID])
+        #expect(FavoriteConsent.isAcknowledged)
+    }
+
     @MainActor
     @Test func favoriteCommandIsRejectedOutsideMesh() async {
         let identityManager = MockIdentityManager(MockKeychain())
