@@ -98854,181 +98854,181 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "انقر ثلاث مرات على شعار bitchat/ للمسح دون تأكيد (توجد نسخة بتأكيد في الإعدادات). فهو يمحو الرسائل والمفاتيح والهوية والمفضّلات وقوائم الحظر والموقع على هذا الجهاز — لكن الوسائط تُمحى بعد لحظة في الخلفية، لذا أبقِ التطبيق مفتوحًا لوهلة. لا يمكنه استعادة أي شيء تم إرساله بالفعل، ولا يمحو البيانات محوًا يقاوم التحليل الجنائي، ويترك أي نسخ احتياطية على iCloud/Finder دون مساس."
+            "value" : "انقر ثلاث مرات على شعار bitchat/ ثم أكّد — الزر نفسه موجود في الإعدادات. يمحو الرسائل والوسائط والمفاتيح والهوية والمفضّلات وقوائم الحظر والموقع على هذا الجهاز قبل أن ينتهي؛ ظهور رسالة نظام يعني أنه نجح، وظهور شريط أحمر مكتوب فيه «المسح غير مكتمل» يعني أن تُغلق bitchat وتعيد فتحه لإعادة المحاولة. لا يمكنه استعادة أي شيء تم إرساله بالفعل، ولا يمحو البيانات محوًا يقاوم التحليل الجنائي، ويترك أي نسخ احتياطية على iCloud/Finder دون مساس."
           }
         },
         "bn" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "কোনো নিশ্চিতকরণ ছাড়াই মুছে ফেলতে bitchat/ লোগোতে তিনবার ট্যাপ করুন (সেটিংসে নিশ্চিতকরণসহ একটি সংস্করণ আছে)। এটি এই ডিভাইসে বার্তা, কী, পরিচয়, ফেভারিট, ব্লক, এবং অবস্থান মুছে ফেলে — কিন্তু মিডিয়া একটু পরে ব্যাকগ্রাউন্ডে মুছে যায়, তাই অ্যাপটি অল্প সময়ের জন্য খোলা রাখুন। এটি ইতিমধ্যে পাঠানো কিছু ফিরিয়ে আনতে পারে না, ফরেনসিকভাবে ধ্বংস করে না, এবং কোনো iCloud/Finder ব্যাকআপ অক্ষত রেখে দেয়।"
+            "value" : "bitchat/ লোগোতে তিনবার ট্যাপ করুন, তারপর নিশ্চিত করুন — সেটিংসে একই বোতাম আছে। এটি এই ডিভাইসে বার্তা, মিডিয়া, কী, পরিচয়, ফেভারিট, ব্লক, এবং অবস্থান মুছে ফেলে এবং কাজ শেষ হওয়ার আগে ফেরে না; একটি সিস্টেম বার্তা মানে এটি কাজ করেছে, আর \"মুছে ফেলা অসম্পূর্ণ\" লেখা লাল ব্যানার মানে bitchat বন্ধ করে আবার খুলে ফের চেষ্টা করুন। এটি ইতিমধ্যে পাঠানো কিছু ফিরিয়ে আনতে পারে না, ফরেনসিকভাবে ধ্বংস করে না, এবং কোনো iCloud/Finder ব্যাকআপ অক্ষত রেখে দেয়।"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "tippe dreimal auf das bitchat/-logo, um ohne bestätigung zu löschen (in den einstellungen gibt es eine version mit bestätigung). es löscht nachrichten, schlüssel, identität, favoriten, blockierungen und den standort auf diesem gerät — aber medien werden erst einen moment später im hintergrund gelöscht, halte die app also kurz geöffnet. es kann bereits gesendetes nicht zurückholen, löscht nicht forensisch sicher und lässt etwaige icloud-/finder-backups unangetastet."
+            "value" : "tippe dreimal auf das bitchat/-logo und bestätige dann — in den einstellungen gibt es denselben knopf. sie löscht nachrichten, medien, schlüssel, identität, favoriten, blockierungen und den standort auf diesem gerät, bevor sie zurückkehrt; eine systemmeldung heißt, es hat geklappt, ein rotes banner „löschen unvollständig“ heißt: bitchat beenden und erneut öffnen, um es noch einmal zu versuchen. sie kann bereits gesendetes nicht zurückholen, löscht nicht forensisch sicher und lässt etwaige icloud-/finder-backups unangetastet."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "triple-tap the bitchat/ logo to wipe with no confirmation (settings has a confirmed version). it erases messages, keys, identity, favorites, blocks, and location on this device — but media clears a moment later in the background, so keep the app open briefly. it can't recall anything already sent, doesn't shred forensically, and leaves any icloud/finder backups untouched."
+            "value" : "triple-tap the bitchat/ logo, then confirm — settings has the same button. it erases messages, media, keys, identity, favorites, blocks, and location on this device before it returns; a system message means it worked, a red \"wipe incomplete\" banner means quit and reopen to retry. it can't recall anything already sent, doesn't shred forensically, and leaves any icloud/finder backups untouched."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "toca tres veces el logo de bitchat/ para borrar sin confirmación (ajustes tiene una versión con confirmación). borra mensajes, claves, identidad, favoritos, bloqueos y ubicación en este dispositivo, pero los archivos multimedia se borran un momento después en segundo plano, así que mantén la app abierta un momento. no puede retirar nada de lo ya enviado, no hace un borrado a prueba de análisis forense, y deja intactas las copias de seguridad de iCloud/Finder."
+            "value" : "toca tres veces el logo de bitchat/ y luego confirma — ajustes tiene el mismo botón. borra mensajes, archivos multimedia, claves, identidad, favoritos, bloqueos y ubicación en este dispositivo antes de terminar; un mensaje del sistema significa que funcionó, y un aviso rojo que dice «borrado incompleto» significa cerrar y volver a abrir bitchat para reintentar. no puede retirar nada de lo ya enviado, no hace un borrado a prueba de análisis forense, y deja intactas las copias de seguridad de iCloud/Finder."
           }
         },
         "fa" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "برای پاک‌سازی بدون تأیید، روی لوگوی bitchat سه‌بار ضربه بزنید (تنظیمات یک نسخه‌ی همراه با تأیید دارد). این کار پیام‌ها، کلیدها، هویت، موردعلاقه‌ها، بلاک‌ها و موقعیت مکانی را روی این دستگاه پاک می‌کند — اما رسانه‌ها لحظه‌ای بعد در پس‌زمینه پاک می‌شوند، پس برنامه را کمی باز نگه دارید. این کار نمی‌تواند چیزی را که قبلاً ارسال شده بازگرداند، داده‌ها را به‌شکلی که در برابر بازیابی پزشکی‌قانونی مقاوم باشد نابود نمی‌کند، و هرگونه پشتیبان‌گیریِ icloud/finder را دست‌نخورده باقی می‌گذارد."
+            "value" : "روی لوگوی bitchat/ سه‌بار ضربه بزنید و سپس تأیید کنید — همین دکمه در تنظیمات هم هست. پیام‌ها، رسانه‌ها، کلیدها، هویت، موردعلاقه‌ها، بلاک‌ها و موقعیت مکانی را روی این دستگاه پاک می‌کند و تا پایان این کار برنمی‌گردد؛ دیدن یک پیام سیستمی یعنی موفق بوده، و نوار قرمزی با متن «پاک‌سازی ناقص است» یعنی bitchat را ببندید و دوباره باز کنید تا دوباره تلاش شود. این کار نمی‌تواند چیزی را که قبلاً ارسال شده بازگرداند، داده‌ها را به‌شکلی که در برابر بازیابی پزشکی‌قانونی مقاوم باشد نابود نمی‌کند، و هرگونه پشتیبان‌گیریِ icloud/finder را دست‌نخورده باقی می‌گذارد."
           }
         },
         "fil" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "triple-tap ang bitchat/ logo upang mag-wipe nang walang kumpirmasyon (may bersyong may kumpirmasyon sa settings). binubura nito ang mga mensahe, susi, pagkakakilanlan, favorites, blocks, at lokasyon sa device na ito — ngunit ang media ay natatanggal pagkalipas ng ilang saglit sa background, kaya panatilihing bukas ang app nang panandalian. hindi nito maibabalik ang anumang naipadala na, hindi ito nag-shred nang forensic, at iniiwang hindi nagagalaw ang anumang icloud/finder na mga backup."
+            "value" : "triple-tap ang bitchat/ logo, tapos kumpirmahin — nasa settings din ang parehong button. binubura nito ang mga mensahe, media, susi, pagkakakilanlan, favorites, blocks, at lokasyon sa device na ito bago ito matapos; ang system message ay ibig sabihin gumana ito, at ang pulang banner na \"hindi kumpleto ang pagbura\" ay ibig sabihin isara at buksan muli ang bitchat para subukan ulit. hindi nito maibabalik ang anumang naipadala na, hindi ito nag-shred nang forensic, at iniiwang hindi nagagalaw ang anumang icloud/finder na mga backup."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "appuyez trois fois sur le logo bitchat/ pour effacer sans confirmation (les réglages proposent une version avec confirmation). cela efface les messages, les clés, l'identité, les favoris, les blocages et la localisation sur cet appareil — mais les médias s'effacent un instant plus tard en arrière-plan, alors gardez l'application ouverte un court instant. cela ne peut rien rappeler de ce qui a déjà été envoyé, ne procède pas à un effacement sécurisé anti-forensique, et laisse intactes les éventuelles sauvegardes icloud/finder."
+            "value" : "appuyez trois fois sur le logo bitchat/, puis confirmez — les réglages proposent le même bouton. cela efface les messages, les médias, les clés, l'identité, les favoris, les blocages et la localisation sur cet appareil avant de rendre la main ; un message système signifie que ça a marché, une bannière rouge « effacement incomplet » signifie qu'il faut quitter et rouvrir bitchat pour réessayer. cela ne peut rien rappeler de ce qui a déjà été envoyé, ne procède pas à un effacement sécurisé anti-forensique, et laisse intactes les éventuelles sauvegardes icloud/finder."
           }
         },
         "he" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "הקש שלוש פעמים על הלוגו של bitchat/ כדי למחוק ללא אישור (בהגדרות יש גרסה עם אישור). היא מוחקת הודעות, מפתחות, זהות, מועדפים, חסימות, ומיקום במכשיר הזה — אך מדיה נמחקת רגע לאחר מכן ברקע, לכן השאר את האפליקציה פתוחה לזמן קצר. היא אינה יכולה לשלוף בחזרה דבר שכבר נשלח, אינה מבצעת מחיקה פורנזית מאובטחת, ומשאירה גיבויי icloud/finder כלשהם ללא נגיעה."
+            "value" : "הקש שלוש פעמים על הלוגו של bitchat/ ואז אשר — אותו כפתור נמצא גם בהגדרות. היא מוחקת הודעות, מדיה, מפתחות, זהות, מועדפים, חסימות ומיקום במכשיר הזה לפני שהיא חוזרת; הודעת מערכת פירושה שזה הצליח, ובאנר אדום שכתוב בו \"המחיקה לא הושלמה\" פירושו לסגור ולפתוח מחדש את bitchat כדי לנסות שוב. היא אינה יכולה לשלוף בחזרה דבר שכבר נשלח, אינה מבצעת מחיקה פורנזית מאובטחת, ומשאירה גיבויי icloud/finder כלשהם ללא נגיעה."
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "बिना किसी पुष्टि के वाइप करने के लिए bitchat/ लोगो पर तीन बार टैप करें (सेटिंग्स में एक पुष्टि वाला संस्करण है)। यह इस डिवाइस पर संदेश, कुंजियाँ, पहचान, पसंदीदा, ब्लॉक, और स्थान मिटा देता है — लेकिन मीडिया पृष्ठभूमि में एक पल बाद साफ़ होता है, इसलिए ऐप को थोड़ी देर खुला रखें। यह पहले से भेजी गई किसी भी चीज़ को वापस नहीं ला सकता, फोरेंसिक रूप से नष्ट नहीं करता, और किसी भी icloud/finder बैकअप को अछूता छोड़ देता है।"
+            "value" : "bitchat/ लोगो पर तीन बार टैप करें, फिर पुष्टि करें — सेटिंग्स में भी वही बटन है। यह इस डिवाइस पर संदेश, मीडिया, कुंजियाँ, पहचान, पसंदीदा, ब्लॉक, और स्थान मिटाता है और यह काम पूरा होने से पहले लौटता नहीं; एक सिस्टम संदेश का मतलब है कि यह हो गया, और \"मिटाना अधूरा रहा\" कहने वाले लाल बैनर का मतलब है bitchat बंद करके दोबारा खोलें और फिर से कोशिश करें। यह पहले से भेजी गई किसी भी चीज़ को वापस नहीं ला सकता, फोरेंसिक रूप से नष्ट नहीं करता, और किसी भी icloud/finder बैकअप को अछूता छोड़ देता है।"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ketuk logo bitchat/ tiga kali untuk menghapus tanpa konfirmasi (pengaturan memiliki versi yang meminta konfirmasi). ini menghapus pesan, kunci, identitas, favorit, blokiran, dan lokasi di perangkat ini — tapi media baru terhapus sesaat kemudian di latar belakang, jadi biarkan aplikasi tetap terbuka sebentar. ini tidak bisa menarik kembali apa pun yang sudah terkirim, tidak menghancurkan data secara forensik, dan membiarkan cadangan icloud/finder apa pun tetap utuh."
+            "value" : "ketuk logo bitchat/ tiga kali, lalu konfirmasi — tombol yang sama ada di pengaturan. ini menghapus pesan, media, kunci, identitas, favorit, blokiran, dan lokasi di perangkat ini sebelum selesai; sebuah pesan sistem berarti berhasil, dan spanduk merah \"penghapusan belum selesai\" berarti tutup dan buka kembali bitchat untuk mencoba lagi. ini tidak bisa menarik kembali apa pun yang sudah terkirim, tidak menghancurkan data secara forensik, dan membiarkan cadangan icloud/finder apa pun tetap utuh."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "tocca tre volte il logo bitchat/ per cancellare senza conferma (nelle impostazioni c'è una versione con conferma). elimina messaggi, chiavi, identità, preferiti, blocchi e posizione su questo dispositivo — ma i media vengono cancellati un momento dopo in background, quindi tieni l'app aperta per un breve istante. non può richiamare nulla che sia già stato inviato, non esegue una cancellazione sicura a prova di analisi forense, e lascia intatti eventuali backup su icloud/finder."
+            "value" : "tocca tre volte il logo bitchat/, poi conferma — nelle impostazioni c'è lo stesso pulsante. elimina messaggi, media, chiavi, identità, preferiti, blocchi e posizione su questo dispositivo prima di terminare; un messaggio di sistema significa che ha funzionato, un banner rosso \"cancellazione incompleta\" significa chiudere e riaprire bitchat per riprovare. non può richiamare nulla che sia già stato inviato, non esegue una cancellazione sicura a prova di analisi forense, e lascia intatti eventuali backup su icloud/finder."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "bitchat/ のロゴを3回タップすると、確認なしでワイプします（設定には確認ありの版があります）。この端末上のメッセージ、鍵、身元、お気に入り、ブロック、位置情報を消去します。ただしメディアは少し遅れてバックグラウンドで消去されるため、アプリをしばらく開いたままにしてください。すでに送信したものを取り消すことはできず、フォレンジックに耐える完全消去（シュレッド）は行わず、iCloud や Finder のバックアップには一切手を付けません。"
+            "value" : "bitchat/ のロゴを3回タップし、確認します — 設定にも同じボタンがあります。この端末上のメッセージ、メディア、鍵、身元、お気に入り、ブロック、位置情報を消去し、消し終わるまで戻りません。システムメッセージが出れば成功、「消去が完了していません」という赤いバナーが出たら bitchat を終了して開き直し、やり直してください。すでに送信したものを取り消すことはできず、フォレンジックに耐える完全消去（シュレッド）は行わず、iCloud や Finder のバックアップには一切手を付けません。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "확인 절차 없이 지우려면 bitchat/ 로고를 세 번 탭하라(설정에는 확인 절차가 있는 버전이 있다). 이 기기의 메시지, 키, 신원, 즐겨찾기, 차단 목록, 위치를 지운다 — 다만 미디어는 잠시 후 백그라운드에서 지워지므로, 앱을 잠깐 열어 두어라. 이미 보낸 것은 되돌릴 수 없고, 포렌식 수준으로 완전히 파쇄하지는 않으며, iCloud/Finder 백업은 손대지 않고 그대로 남겨 둔다."
+            "value" : "bitchat/ 로고를 세 번 탭한 뒤 확인하라 — 설정에도 같은 버튼이 있다. 이 기기의 메시지, 미디어, 키, 신원, 즐겨찾기, 차단 목록, 위치를 지우며, 다 지우기 전에는 끝나지 않는다. 시스템 메시지가 뜨면 성공이고, \"삭제가 완료되지 않았습니다\"라는 빨간 배너가 뜨면 bitchat을 종료했다가 다시 열어 재시도하라. 이미 보낸 것은 되돌릴 수 없고, 포렌식 수준으로 완전히 파쇄하지는 않으며, iCloud/Finder 백업은 손대지 않고 그대로 남겨 둔다."
           }
         },
         "ms" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ketuk tiga kali logo bitchat/ untuk memadam tanpa pengesahan (tetapan mempunyai versi yang memerlukan pengesahan). ia memadam mesej, kunci, identiti, kegemaran, sekatan, dan lokasi pada peranti ini — tetapi media dibersihkan sesaat kemudian di latar belakang, jadi biarkan aplikasi terbuka sebentar. ia tidak boleh menarik semula apa-apa yang telah dihantar, tidak memusnahkan data secara forensik, dan membiarkan sebarang sandaran icloud/finder tidak tersentuh."
+            "value" : "ketuk tiga kali logo bitchat/, kemudian sahkan — butang yang sama ada dalam tetapan. ia memadam mesej, media, kunci, identiti, kegemaran, sekatan, dan lokasi pada peranti ini sebelum ia selesai; satu mesej sistem bermakna ia berjaya, dan sepanduk merah \"pemadaman tidak lengkap\" bermakna tutup dan buka semula bitchat untuk mencuba lagi. ia tidak boleh menarik semula apa-apa yang telah dihantar, tidak memusnahkan data secara forensik, dan membiarkan sebarang sandaran icloud/finder tidak tersentuh."
           }
         },
         "ne" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "पुष्टि बिना मेटाउन bitchat/ लोगोमा तीनपटक ट्याप गर्नुहोस् (सेटिङमा पुष्टि सहितको संस्करण छ)। यसले यस यन्त्रमा सन्देशहरू, कुञ्जीहरू, पहिचान, मनपर्नेहरू, block हरू, र स्थान मेटाउँछ — तर मिडिया केही क्षणपछि पृष्ठभूमिमा हट्छ, त्यसैले एपलाई छोटो समय खुला राख्नुहोस्। यसले पहिले नै पठाइसकेको कुनै पनि कुरा फिर्ता ल्याउन सक्दैन, फोरेन्सिक रूपमा नष्ट गर्दैन, र कुनै पनि icloud/Finder ब्याकअपलाई अछुतो छोड्छ।"
+            "value" : "bitchat/ लोगोमा तीनपटक ट्याप गर्नुहोस्, त्यसपछि पुष्टि गर्नुहोस् — सेटिङमा पनि उही बटन छ। यसले यस यन्त्रमा सन्देशहरू, मिडिया, कुञ्जीहरू, पहिचान, मनपर्नेहरू, block हरू, र स्थान मेटाउँछ र काम नसकिँदासम्म फर्किंदैन; प्रणालीको सन्देश देखिनुको अर्थ यो भयो भन्ने हो, र \"मेटाउने काम अधूरो\" भन्ने रातो ब्यानरको अर्थ bitchat बन्द गरेर फेरि खोली पुनः प्रयास गर्नुहोस् भन्ने हो। यसले पहिले नै पठाइसकेको कुनै पनि कुरा फिर्ता ल्याउन सक्दैन, फोरेन्सिक रूपमा नष्ट गर्दैन, र कुनै पनि icloud/Finder ब्याकअपलाई अछुतो छोड्छ।"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "tik drie keer op het bitchat/-logo om te wissen zonder bevestiging (instellingen heeft een versie met bevestiging). het wist berichten, sleutels, identiteit, favorieten, blokkeringen en locatie op dit apparaat — maar media worden even later op de achtergrond gewist, dus houd de app kort open. het kan niets terughalen wat al is verzonden, wist gegevens niet forensisch onherstelbaar, en laat eventuele icloud-/finder-back-ups ongemoeid."
+            "value" : "tik drie keer op het bitchat/-logo en bevestig dan — instellingen heeft dezelfde knop. het wist berichten, media, sleutels, identiteit, favorieten, blokkeringen en locatie op dit apparaat voordat het terugkeert; een systeembericht betekent dat het gelukt is, en een rode banner \"wissen onvolledig\" betekent bitchat afsluiten en opnieuw openen om het nogmaals te proberen. het kan niets terughalen wat al is verzonden, wist gegevens niet forensisch onherstelbaar, en laat eventuele icloud-/finder-back-ups ongemoeid."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "stuknij trzykrotnie w logo bitchat/, aby wymazać bez potwierdzenia (w ustawieniach jest wersja z potwierdzeniem). usuwa to wiadomości, klucze, tożsamość, ulubione, blokady i lokalizację na tym urządzeniu — ale multimedia czyszczą się chwilę później w tle, więc pozostaw aplikację otwartą przez moment. nie może odwołać niczego, co już zostało wysłane, nie niszczy danych w sposób odporny na analizę śledczą i nie narusza żadnych kopii zapasowych icloud/finder."
+            "value" : "stuknij trzykrotnie w logo bitchat/, a potem potwierdź — w ustawieniach jest ten sam przycisk. usuwa wiadomości, multimedia, klucze, tożsamość, ulubione, blokady i lokalizację na tym urządzeniu, zanim się zakończy; komunikat systemowy oznacza, że się udało, a czerwony baner „wymazywanie niekompletne” oznacza: zamknij i otwórz bitchat ponownie, aby spróbować jeszcze raz. nie może odwołać niczego, co już zostało wysłane, nie niszczy danych w sposób odporny na analizę śledczą i nie narusza żadnych kopii zapasowych icloud/finder."
           }
         },
         "pt" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "toca três vezes no logótipo bitchat/ para limpar sem confirmação (as definições têm uma versão com confirmação). apaga as mensagens, as chaves, a identidade, os favoritos, os bloqueios e a localização neste dispositivo — mas os ficheiros multimédia são apagados um momento depois em segundo plano, por isso mantém a app aberta por breves instantes. não consegue recuperar nada que já tenha sido enviado, não faz uma destruição forense dos dados, e deixa intactas quaisquer cópias de segurança do icloud/finder."
+            "value" : "toca três vezes no logótipo bitchat/ e depois confirma — as definições têm o mesmo botão. apaga as mensagens, os ficheiros multimédia, as chaves, a identidade, os favoritos, os bloqueios e a localização neste dispositivo antes de terminar; uma mensagem de sistema significa que resultou, e um aviso vermelho «limpeza incompleta» significa fechar e reabrir o bitchat para tentar novamente. não consegue recuperar nada que já tenha sido enviado, não faz uma destruição forense dos dados, e deixa intactas quaisquer cópias de segurança do icloud/finder."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "toque três vezes no logotipo do bitchat/ para limpar sem confirmação (as configurações têm uma versão com confirmação). ela apaga mensagens, chaves, identidade, favoritos, bloqueios e localização neste dispositivo — mas a mídia é apagada um instante depois em segundo plano, então mantenha o app aberto por um momento. ela não consegue trazer de volta nada que já foi enviado, não faz uma destruição de nível forense, e deixa intactos quaisquer backups do icloud/finder."
+            "value" : "toque três vezes no logotipo do bitchat/ e depois confirme — as configurações têm o mesmo botão. ela apaga mensagens, mídia, chaves, identidade, favoritos, bloqueios e localização neste dispositivo antes de terminar; uma mensagem do sistema significa que deu certo, e um aviso vermelho \"limpeza incompleta\" significa fechar e reabrir o bitchat para tentar novamente. ela não consegue trazer de volta nada que já foi enviado, não faz uma destruição de nível forense, e deixa intactos quaisquer backups do icloud/finder."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "трижды коснитесь логотипа bitchat/, чтобы стереть данные без подтверждения (в настройках есть вариант с подтверждением). это удаляет сообщения, ключи, личность, избранное, блокировки и местоположение на этом устройстве — но медиафайлы очищаются чуть позже в фоне, поэтому ненадолго оставьте приложение открытым. это не может отозвать то, что уже отправлено, не уничтожает данные с криминалистической надёжностью и оставляет нетронутыми любые резервные копии в icloud/finder."
+            "value" : "трижды коснитесь логотипа bitchat/, затем подтвердите — та же кнопка есть в настройках. оно удаляет сообщения, медиафайлы, ключи, личность, избранное, блокировки и местоположение на этом устройстве и не завершается, пока всё это не стёрто; системное сообщение означает, что получилось, а красная плашка «стирание не завершено» означает: закройте и снова откройте bitchat, чтобы повторить. оно не может отозвать то, что уже отправлено, не уничтожает данные с криминалистической надёжностью и оставляет нетронутыми любые резервные копии в icloud/finder."
           }
         },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "tryck tre gånger på bitchat/-logotypen för att radera utan bekräftelse (inställningar har en bekräftad version). det raderar meddelanden, nycklar, identitet, favoriter, blockeringar och plats på den här enheten — men media rensas ett ögonblick senare i bakgrunden, så håll appen öppen en kort stund. det kan inte återkalla något som redan skickats, förstör inte data forensiskt, och lämnar eventuella icloud/finder-säkerhetskopior orörda."
+            "value" : "tryck tre gånger på bitchat/-logotypen och bekräfta sedan — samma knapp finns i inställningar. den raderar meddelanden, media, nycklar, identitet, favoriter, blockeringar och plats på den här enheten innan den återvänder; ett systemmeddelande betyder att det fungerade, och en röd banner med ”raderingen är ofullständig” betyder att du ska avsluta och öppna bitchat igen för att försöka på nytt. den kan inte återkalla något som redan skickats, förstör inte data forensiskt, och lämnar eventuella icloud/finder-säkerhetskopior orörda."
           }
         },
         "ta" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "எந்த உறுதிப்படுத்தலும் இல்லாமல் wipe செய்ய bitchat/ லோகோவை மூன்று முறை தட்டுங்கள் (அமைப்புகளில் உறுதிப்படுத்தப்பட்ட பதிப்பு உள்ளது). இது இந்த சாதனத்தில் செய்திகள், விசைகள், அடையாளம், பிடித்தவை, block-கள் மற்றும் இருப்பிடத்தை அழிக்கிறது — ஆனால் ஊடகம் சிறிது நேரம் கழித்து பின்னணியில் அழிக்கப்படுகிறது, எனவே பயன்பாட்டை சிறிது நேரம் திறந்தே வைத்திருங்கள். ஏற்கனவே அனுப்பப்பட்ட எதையும் இது திரும்பப் பெற முடியாது, தடயவியல் ரீதியாக நசுக்காது (shred), மேலும் எந்த icloud/finder காப்புப் பிரதிகளையும் தொடாமல் விட்டுவிடுகிறது."
+            "value" : "bitchat/ லோகோவை மூன்று முறை தட்டி, பிறகு உறுதிப்படுத்துங்கள் — அமைப்புகளிலும் அதே பொத்தான் உள்ளது. இது இந்த சாதனத்தில் செய்திகள், ஊடகம், விசைகள், அடையாளம், பிடித்தவை, block-கள் மற்றும் இருப்பிடத்தை அழிக்கும் வரை முடிவடையாது; ஒரு சிஸ்டம் செய்தி வந்தால் அது வேலை செய்தது, \"அழித்தல் முழுமையடையவில்லை\" எனும் சிவப்பு பட்டை வந்தால் bitchat ஐ மூடி மீண்டும் திறந்து மறுமுயற்சி செய்யுங்கள். ஏற்கனவே அனுப்பப்பட்ட எதையும் இது திரும்பப் பெற முடியாது, தடயவியல் ரீதியாக நசுக்காது (shred), மேலும் எந்த icloud/finder காப்புப் பிரதிகளையும் தொடாமல் விட்டுவிடுகிறது."
           }
         },
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "แตะโลโก้ bitchat/ สามครั้งเพื่อล้างข้อมูลโดยไม่มีการยืนยัน (ในการตั้งค่ามีเวอร์ชันที่ต้องยืนยัน) มันจะลบข้อความ กุญแจ ตัวตน รายการโปรด รายการบล็อก และตำแหน่งบนอุปกรณ์นี้ — แต่สื่อจะถูกล้างในเบื้องหลังอีกสักครู่หลังจากนั้น ดังนั้นเปิดแอปทิ้งไว้สักครู่ มันเรียกคืนสิ่งที่ส่งไปแล้วไม่ได้ ไม่ได้ทำลายข้อมูลแบบกันการกู้คืนทางนิติวิทยาศาสตร์ และไม่ได้แตะต้องข้อมูลสำรองบน icloud/finder ใดๆ"
+            "value" : "แตะโลโก้ bitchat/ สามครั้ง แล้วยืนยัน — ในการตั้งค่ามีปุ่มเดียวกันนี้ มันจะลบข้อความ สื่อ กุญแจ ตัวตน รายการโปรด รายการบล็อก และตำแหน่งบนอุปกรณ์นี้ให้เสร็จก่อนจึงจบการทำงาน ข้อความระบบที่ขึ้นมาหมายความว่าสำเร็จ ส่วนแถบสีแดงที่ระบุว่า \"การล้างข้อมูลไม่สมบูรณ์\" หมายความว่าให้ปิดแล้วเปิด bitchat ใหม่เพื่อลองอีกครั้ง มันเรียกคืนสิ่งที่ส่งไปแล้วไม่ได้ ไม่ได้ทำลายข้อมูลแบบกันการกู้คืนทางนิติวิทยาศาสตร์ และไม่ได้แตะต้องข้อมูลสำรองบน icloud/finder ใดๆ"
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "onay olmadan silmek için bitchat/ logosuna üç kez dokunun (ayarlarda onaylı bir sürüm var). bu cihazdaki mesajları, anahtarları, kimliği, favorileri, engellemeleri ve konumu siler — ama medya bir an sonra arka planda temizlenir, o yüzden uygulamayı kısa bir süre açık tutun. gönderilmiş hiçbir şeyi geri çağıramaz, adli düzeyde güvenli silme yapmaz ve varsa icloud/finder yedeklerine dokunmaz."
+            "value" : "bitchat/ logosuna üç kez dokunun, sonra onaylayın — aynı düğme ayarlarda da var. bu cihazdaki mesajları, medyayı, anahtarları, kimliği, favorileri, engellemeleri ve konumu siler ve bu iş bitmeden geri dönmez; bir sistem mesajı işe yaradığı anlamına gelir, \"silme tamamlanmadı\" yazan kırmızı şerit ise yeniden denemek için bitchat'i kapatıp tekrar açmanız gerektiği anlamına gelir. gönderilmiş hiçbir şeyi geri çağıramaz, adli düzeyde güvenli silme yapmaz ve varsa icloud/finder yedeklerine dokunmaz."
           }
         },
         "uk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "тричі торкнись логотипа bitchat/, щоб стерти без підтвердження (у налаштуваннях є версія з підтвердженням). воно стирає повідомлення, ключі, особистість, обране, блокування та місцезнаходження на цьому пристрої — але медіа очищаються трохи згодом у фоновому режимі, тож ненадовго залиш застосунок відкритим. воно не може відкликати вже надіслане, не знищує дані способом, стійким до криміналістичного відновлення, і залишає будь-які резервні копії icloud/finder недоторканими."
+            "value" : "тричі торкнись логотипа bitchat/, потім підтверди — та сама кнопка є в налаштуваннях. воно стирає повідомлення, медіа, ключі, особистість, обране, блокування та місцезнаходження на цьому пристрої й не завершується, доки не зітре все; системне повідомлення означає, що спрацювало, а червона смуга «стирання не завершено» означає: закрий і знову відкрий bitchat, щоб повторити. воно не може відкликати вже надіслане, не знищує дані способом, стійким до криміналістичного відновлення, і залишає будь-які резервні копії icloud/finder недоторканими."
           }
         },
         "ur" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "بغیر کسی تصدیق کے مٹانے کے لیے bitchat/ لوگو پر تین بار تھپتھپائیں (سیٹنگز میں ایک تصدیق شدہ ورژن موجود ہے)۔ یہ اس آلے پر پیغامات، کلیدیں، شناخت، پسندیدہ، بلاکس، اور مقام مٹا دیتا ہے — لیکن میڈیا کچھ لمحوں بعد پس منظر میں صاف ہوتا ہے، اس لیے ایپ کو تھوڑی دیر کھلا رکھیں۔ یہ پہلے سے بھیجی گئی کسی بھی چیز کو واپس نہیں بلا سکتا، فرانزک طور پر (forensically) نہیں مٹاتا، اور کسی بھی icloud/finder بیک اپ کو نہیں چھیڑتا۔"
+            "value" : "bitchat/ لوگو پر تین بار تھپتھپائیں، پھر تصدیق کریں — یہی بٹن سیٹنگز میں بھی ہے۔ یہ اس آلے پر پیغامات، میڈیا، کلیدیں، شناخت، پسندیدہ، بلاکس، اور مقام مٹا دیتا ہے اور یہ کام مکمل کیے بغیر واپس نہیں آتا؛ سسٹم پیغام کا مطلب ہے کہ یہ ہو گیا، اور \"مٹانا مکمل نہیں ہوا\" کہنے والے سرخ بینر کا مطلب ہے bitchat بند کر کے دوبارہ کھولیں اور دوبارہ کوشش کریں۔ یہ پہلے سے بھیجی گئی کسی بھی چیز کو واپس نہیں بلا سکتا، فرانزک طور پر (forensically) نہیں مٹاتا، اور کسی بھی icloud/finder بیک اپ کو نہیں چھیڑتا۔"
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "chạm ba lần vào logo bitchat/ để xóa mà không cần xác nhận (trong phần cài đặt có một phiên bản có xác nhận). nó xóa tin nhắn, khóa, danh tính, mục yêu thích, danh sách chặn, và vị trí trên thiết bị này — nhưng phương tiện (ảnh, video) sẽ được xóa muộn hơn một chút ở chế độ nền, nên hãy giữ ứng dụng mở thêm một lát. nó không thể thu hồi bất cứ thứ gì đã gửi, không xóa dữ liệu triệt để đến mức chống được điều tra pháp y, và không đụng đến bất kỳ bản sao lưu icloud/finder nào."
+            "value" : "chạm ba lần vào logo bitchat/, rồi xác nhận — trong phần cài đặt cũng có nút đó. nó xóa tin nhắn, phương tiện, khóa, danh tính, mục yêu thích, danh sách chặn, và vị trí trên thiết bị này xong rồi mới kết thúc; một tin nhắn hệ thống nghĩa là đã xong, còn dải băng đỏ \"xoá chưa hoàn tất\" nghĩa là hãy thoát và mở lại bitchat để thử lại. nó không thể thu hồi bất cứ thứ gì đã gửi, không xóa dữ liệu triệt để đến mức chống được điều tra pháp y, và không đụng đến bất kỳ bản sao lưu icloud/finder nào."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "三次点按 bitchat/ 标志即可无需确认地擦除（设置中另有需要确认的版本）。它会抹除本设备上的消息、密钥、身份、收藏、拉黑名单和位置——但媒体文件会稍后在后台清除，所以请让应用短暂保持打开。它无法收回任何已发送的内容，不做取证级的粉碎擦除，也不会触及任何 icloud/finder 备份。"
+            "value" : "三次点按 bitchat/ 标志，然后确认——设置中有同一个按钮。它会在结束前抹除本设备上的消息、媒体、密钥、身份、收藏、拉黑名单和位置；出现系统消息表示成功，出现写着\"清除未完成\"的红色横幅则表示要退出并重新打开 bitchat 重试。它无法收回任何已发送的内容，不做取证级的粉碎擦除，也不会触及任何 icloud/finder 备份。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "連點三下 bitchat/ 標誌即可清除，且不需確認（設定裡另有需確認的版本）。它會抹除本裝置上的訊息、金鑰、身分、我的最愛、封鎖清單與位置——但媒體檔案會稍後在背景才清除，所以請讓 app 再開著一小段時間。它無法收回任何已送出的內容，不會進行防鑑識層級的粉碎抹除，也不會動到任何 icloud／finder 備份。"
+            "value" : "連點三下 bitchat/ 標誌，然後確認——設定裡有同一個按鈕。它會在結束前抹除本裝置上的訊息、媒體、金鑰、身分、我的最愛、封鎖清單與位置；出現系統訊息代表成功，出現寫著「清除未完成」的紅色橫幅則代表要結束並重新開啟 bitchat 重試。它無法收回任何已送出的內容，不會進行防鑑識層級的粉碎抹除，也不會動到任何 icloud／finder 備份。"
           }
         }
       }
@@ -99040,181 +99040,181 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "مسح الطوارئ محلي وفوري"
+            "value" : "مسح الطوارئ محلي ولا يمكن التراجع عنه"
           }
         },
         "bn" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "প্যানিক ওয়াইপ স্থানীয় এবং তাৎক্ষণিক"
+            "value" : "প্যানিক ওয়াইপ স্থানীয় এবং অপরিবর্তনীয়"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "die panik-löschung ist lokal und sofort"
+            "value" : "die panik-löschung ist lokal und unwiderruflich"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "panic wipe is local and instant"
+            "value" : "panic wipe is local and irreversible"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "el borrado de pánico es local e instantáneo"
+            "value" : "el borrado de pánico es local e irreversible"
           }
         },
         "fa" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "پاک‌سازی اضطراری محلی و آنی است"
+            "value" : "پاک‌سازی اضطراری محلی و برگشت‌ناپذیر است"
           }
         },
         "fil" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ang panic wipe ay lokal at agaran"
+            "value" : "ang panic wipe ay lokal at hindi na mababawi"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "l'effacement d'urgence est local et instantané"
+            "value" : "l'effacement d'urgence est local et irréversible"
           }
         },
         "he" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "מחיקת חירום היא מקומית ומיידית"
+            "value" : "מחיקת חירום היא מקומית ובלתי הפיכה"
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "panic वाइप स्थानीय और तत्काल है"
+            "value" : "panic वाइप स्थानीय और अपरिवर्तनीय है"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "hapus panik bersifat lokal dan seketika"
+            "value" : "hapus panik bersifat lokal dan tidak bisa dibatalkan"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "la cancellazione di emergenza è locale e istantanea"
+            "value" : "la cancellazione di emergenza è locale e irreversibile"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "パニックワイプはローカルで即座に実行される"
+            "value" : "パニックワイプはローカルで、取り消せない"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "패닉 삭제는 로컬에서 즉시 실행된다"
+            "value" : "패닉 삭제는 로컬에서 이뤄지고 되돌릴 수 없다"
           }
         },
         "ms" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "pemadaman panik adalah setempat dan serta-merta"
+            "value" : "pemadaman panik adalah setempat dan tidak boleh dibatalkan"
           }
         },
         "ne" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "panic wipe स्थानीय र तत्काल हो"
+            "value" : "panic wipe स्थानीय र अपरिवर्तनीय हो"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "paniekwissen is lokaal en direct"
+            "value" : "paniekwissen is lokaal en onomkeerbaar"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "awaryjne wymazanie jest lokalne i natychmiastowe"
+            "value" : "awaryjne wymazanie jest lokalne i nieodwracalne"
           }
         },
         "pt" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "a limpeza de pânico é local e instantânea"
+            "value" : "a limpeza de pânico é local e irreversível"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "a limpeza de pânico é local e instantânea"
+            "value" : "a limpeza de pânico é local e irreversível"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "экстренное стирание — локальное и мгновенное"
+            "value" : "экстренное стирание — локальное и необратимое"
           }
         },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "panikradering är lokal och omedelbar"
+            "value" : "panikradering är lokal och oåterkallelig"
           }
         },
         "ta" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "panic wipe உள்ளூர்தன்மை கொண்டது மற்றும் உடனடியானது"
+            "value" : "panic wipe உள்ளூர்தன்மை கொண்டது மற்றும் மீளமுடியாதது"
           }
         },
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ล้างข้อมูลฉุกเฉินทำในเครื่องและทันที"
+            "value" : "ล้างข้อมูลฉุกเฉินทำในเครื่องและย้อนกลับไม่ได้"
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "panik silme yereldir ve anındadır"
+            "value" : "panik silme yereldir ve geri alınamaz"
           }
         },
         "uk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "екстрене стирання — локальне й миттєве"
+            "value" : "екстрене стирання — локальне й незворотне"
           }
         },
         "ur" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "پینک وائپ مقامی اور فوری ہوتا ہے"
+            "value" : "پینک وائپ مقامی اور ناقابلِ واپسی ہوتا ہے"
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "xóa khẩn cấp là cục bộ và tức thì"
+            "value" : "xóa khẩn cấp là cục bộ và không thể hoàn tác"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "紧急擦除在本地完成，且立即生效"
+            "value" : "紧急擦除在本地完成，且不可撤销"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "緊急清除是本機端且即時的"
+            "value" : "緊急清除是本機端且無法復原的"
           }
         }
       }
