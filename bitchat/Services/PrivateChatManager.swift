@@ -256,11 +256,18 @@ final class PrivateChatManager: ObservableObject {
     /// suites through the shared UserDefaults-backed setting.
     var sendsReadReceipts: () -> Bool = { ReadReceiptSettings.sendReadReceipts }
 
-    /// Records a withheld receipt in the owner's persisted set too: the
-    /// lifecycle read pass dedups against ChatViewModel.sentReadReceipts,
-    /// not this manager's set, so claiming only locally would let a receipt
-    /// for a message read while the setting was OFF fire after re-enabling.
+    /// Records EVERY claim this manager makes — sent and withheld alike — in
+    /// the owner's persisted set too. The lifecycle read pass dedups against
+    /// ChatViewModel.sentReadReceipts, not this manager's set, so a claim
+    /// kept only here is invisible to it: a withheld receipt would fire after
+    /// re-enabling the setting, and a sent one would go out a second time on
+    /// the very same chat open.
     var markReceiptHandled: ((String) -> Void)?
+
+    /// Releases a claim from BOTH sets when the route fails. Dropping it only
+    /// here would leave the owner's set still claiming the receipt, so the
+    /// lifecycle pass would skip it forever and it would never be retried.
+    var releaseReceiptClaim: ((String) -> Void)?
 
     // MARK: - Read-receipt sent-set (shared with ChatViewModel)
 
@@ -272,8 +279,9 @@ final class PrivateChatManager: ObservableObject {
     }
 
     /// Forget sent receipts so they can be re-sent after the peer reconnects.
-    /// `markAsRead` guards on this set, so the view-model's `unmark` must reach
-    /// it or the reconnect re-send never fires.
+    /// `markAsRead` guards on this set while the lifecycle pass guards on the
+    /// view model's, so the view-model's `unmark` must reach both or the two
+    /// sets drift apart and each path decides differently about the same id.
     func forgetReadReceiptsSent(_ ids: [String]) {
         sentReadReceipts.subtract(ids)
     }
@@ -308,20 +316,24 @@ final class PrivateChatManager: ObservableObject {
         if let router = messageRouter {
             SecureLogger.debug("PrivateChatManager: sending READ ack for \(message.id.prefix(8))… to \(senderPeerID.id.prefix(8))… via router", category: .session)
             let messageID = message.id
-            // Claim the receipt synchronously so a second read scan in the
-            // same runloop pass (chat open triggers two) can't route a
-            // duplicate; release the claim on a failed route (no reachable
-            // transport) so a later read scan retries instead of permanently
-            // losing the receipt.
+            // Claim the receipt synchronously, in BOTH sets, before the
+            // routing task can run. A chat open fires three read scans: this
+            // manager's two (deduped here) and the lifecycle pass, which
+            // dedups against the owner's set — so a claim kept only here
+            // would still let that third scan route a second copy of it.
+            // Release both claims on a failed route (no reachable transport)
+            // so a later scan retries instead of losing the receipt for good.
             sentReadReceipts.insert(messageID)
+            markReceiptHandled?(messageID)
             Task { @MainActor [weak self] in
                 if !router.sendReadReceipt(receipt, to: senderPeerID) {
-                    self?.sentReadReceipts.remove(messageID)
+                    self?.releaseReceiptClaim?(messageID)
                 }
             }
         } else {
             // Fallback: preserve previous behavior (best-effort mesh send).
             sentReadReceipts.insert(message.id)
+            markReceiptHandled?(message.id)
             meshService?.sendReadReceipt(receipt, to: senderPeerID)
         }
     }

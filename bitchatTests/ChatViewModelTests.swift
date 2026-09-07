@@ -525,8 +525,8 @@ struct ChatViewModelServiceLifecycleTests {
     }
 
     /// Guards the second half of the fix: `unmarkReadReceiptsSent` must clear
-    /// BOTH sets, or the reconnect re-send it exists to enable would be
-    /// silently defeated (markAsRead guards on the manager set).
+    /// BOTH sets, or they drift apart — markAsRead guards on the manager set,
+    /// the lifecycle pass on the view model's.
     @Test @MainActor
     func unmarkReadReceiptsSentClearsBothSets() {
         let (viewModel, _) = makeTestableViewModel()
@@ -537,6 +537,68 @@ struct ChatViewModelServiceLifecycleTests {
         viewModel.unmarkReadReceiptsSent(["m-1"])
         #expect(!viewModel.sentReadReceipts.contains("m-1"))
         #expect(!viewModel.privateChatManager.sentReadReceipts.contains("m-1"))
+    }
+
+    /// Regression for the duplicate a reopen used to emit: opening a chat
+    /// runs the manager's read scan (claims in the manager set, routes
+    /// asynchronously) and then the lifecycle pass, which dedups against the
+    /// view model's set. Until the manager bridged its successful claims back,
+    /// that second scan saw an unclaimed id and routed the receipt again —
+    /// twice per open, and twice more after a reconnect cleared both sets.
+    @Test @MainActor
+    func readReceiptSentOnceOnOpenAndOnceMoreAfterReconnect() async {
+        let (viewModel, transport) = makeTestableViewModel()
+        let peerID = PeerID(str: "0000000000000043")
+        transport.simulateConnect(peerID, nickname: "Alice")
+
+        let message = BitchatMessage(
+            id: "read-reopen",
+            sender: "Alice",
+            content: "Hello from Alice",
+            timestamp: Date(),
+            isRelay: false,
+            originalSender: nil,
+            isPrivate: true,
+            recipientNickname: viewModel.nickname,
+            senderPeerID: peerID,
+            mentions: nil
+        )
+
+        viewModel.seedPrivateChat([message], for: peerID)
+        viewModel.markPrivateChatUnread(peerID)
+
+        func receiptCount() -> Int {
+            transport.sentReadReceipts.filter { $0.receipt.originalMessageID == "read-reopen" }.count
+        }
+
+        // Open through startPrivateChat, not the selection setter: only this
+        // path runs the lifecycle read pass after the manager's own scan, so
+        // only this path can produce the duplicate.
+        viewModel.startPrivateChat(with: peerID)
+
+        #expect(await TestHelpers.waitUntil({ receiptCount() >= 1 }, timeout: TestConstants.settleTimeout))
+        // Negative wait: a duplicate lands in the same runloop turn as the
+        // first, so nothing more may arrive in this window.
+        _ = await TestHelpers.waitUntil({ receiptCount() > 1 }, timeout: TestConstants.negativeWaitWindow)
+        #expect(receiptCount() == 1)
+
+        // A disconnect clears both claims so the receipt can be re-sent — but
+        // it runs inside a Task, so drain before reopening or the reopen would
+        // still see both sets claiming the id.
+        viewModel.endPrivateChat()
+        transport.simulateDisconnect(peerID)
+        #expect(await TestHelpers.waitUntil({
+            !viewModel.sentReadReceipts.contains("read-reopen")
+                && !viewModel.privateChatManager.sentReadReceipts.contains("read-reopen")
+        }, timeout: TestConstants.settleTimeout))
+
+        transport.simulateConnect(peerID, nickname: "Alice")
+        viewModel.startPrivateChat(with: peerID)
+
+        #expect(await TestHelpers.waitUntil({ receiptCount() >= 2 }, timeout: TestConstants.settleTimeout))
+        _ = await TestHelpers.waitUntil({ receiptCount() > 2 }, timeout: TestConstants.negativeWaitWindow)
+        // The one original plus a single retry — not a pair per open.
+        #expect(receiptCount() == 2)
     }
 
     @Test @MainActor

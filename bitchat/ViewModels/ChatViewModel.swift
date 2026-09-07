@@ -558,9 +558,10 @@ final class ChatViewModel: ObservableObject, BitchatDelegate, SynchronousMessage
     @MainActor
     func unmarkReadReceiptsSent(_ ids: [String]) {
         sentReadReceipts.subtract(ids)
-        // Must reach the manager set too: markAsRead's re-send-after-reconnect
-        // path guards on the manager set, so leaving ids stuck there would
-        // silently defeat the reconnect re-send this method exists to enable.
+        // Must reach the manager set too: markAsRead guards on that set while
+        // the lifecycle pass guards on this one, so leaving ids stuck there
+        // would let the two sets disagree about the same receipt — one path
+        // re-sending it, the other still treating it as handled.
         privateChatManager.forgetReadReceiptsSent(ids)
     }
 
