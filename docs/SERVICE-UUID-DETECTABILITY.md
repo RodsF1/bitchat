@@ -27,7 +27,7 @@ Note there are **two** fixed identifiers, not one. Even if the advertised UUID c
 
 ## 2. Why rotating the service UUID does not work
 
-Two independent reasons. Either alone is sufficient.
+Two reasons. The first is sufficient on its own; the second constrains whatever survives it.
 
 ### 2.1 The threat model forecloses it
 
@@ -42,13 +42,13 @@ Covert rendezvous with an adversary who knows the algorithm requires a **pre-sha
 
 The closest real-world analogue is Tor's twenty-year bridge-distribution problem — let unknown strangers find a resource without letting the censor find it. Every mitigation that works (Salmon, Lox, rBridge) gates on social trust and thereby gives up open stranger access. There is no known escape from that trade.
 
-### 2.2 iOS forecloses it mechanically
+### 2.2 iOS constrains it mechanically
 
 - **Third-party iOS apps cannot control advertisement contents.** Only `CBAdvertisementDataLocalNameKey` and `CBAdvertisementDataServiceUUIDsKey` are supported; other keys error. Manufacturer data and service data — where every comparable system puts its rotating payload — are unavailable to us. MASHaBLE, the one BLE secret-handshake prototype, could not be built on iOS for exactly this reason and fell back to Windows Phone.
 - **Advertised services cannot be changed while backgrounded (iOS 14+).** A wall-clock rotation cannot advance while the app is in the background — which is the state during the scenario this feature exists for. *Undocumented by Apple; needs device verification (§6).*
 - **Backgrounded, the UUID is not transmitted at all.** iOS re-encodes it as Apple manufacturer data (`0x004C`) plus a 128-bit bitmask, one bit per advertised UUID. This is worth understanding precisely, because it cuts both ways: background exposure is already only ~7 bits with genuine collisions against every other backgrounded Apple advertiser — but the mapping is stable and empirically discoverable with a free Android app, so an adversary installs bitchat once, notes the bit, and matches passively forever.
 
-The practical consequence: **the real identification exposure is foreground advertising**, where the raw constant is on the air. Rotation's value would be concentrated exactly where iOS permits it least.
+The practical consequence: **the real identification exposure is foreground advertising**, where the raw constant is on the air. iOS does permit rotation there — a foreground app can stop advertising, swap the service, and start again under a new UUID, the same stop / remove / add / start cycle `BLEService+LinkLayerPeripheralRole.swift` already runs at runtime — so the mechanics alone do not foreclose it. What they foreclose is rotation in the **background**, where the app spends most of its life in the scenario this feature exists for, and any scheme that puts the rotating value in manufacturer or service data. Foreground rotation would defeat a scanner holding a stale UUID list; it would not defeat an adversary running the public derivation (§2.1), and GATT connect-and-probe (§4) identifies us regardless of what is advertised.
 
 ---
 
@@ -109,13 +109,12 @@ Ordered by how cheaply an adversary can actually use them — which is not the o
 
 ---
 
-## 5. Three ways a rotation scheme would make things worse
+## 5. Two ways a rotation scheme would make things worse
 
 This is the part that matters most, because each is counter-intuitive.
 
 1. **A derived UUID shrinks the anonymity set.** A global constant hides an individual inside the entire bitchat population. A per-group or per-user derived UUID is a *stronger* selector for a targeted adversary — it identifies not "a bitchat user" but "a member of this cell." Against blanket blocking that is a gain; against targeted work it is a gift.
 2. **State restoration becomes a stale-identifier trap.** If iOS terminates the app while scanning, the system continues scanning for the **old** UUID indefinitely and relaunches the app *into the background*, where §2.2 says the advertisement cannot be updated. A restored device could sit advertising a dead epoch's UUID — undiscoverable by current peers *and* wearing a distinctive stale identifier. Strictly worse than the fixed UUID for that device.
-3. **Anti-tracking standardisation may surface us.** The IETF DULT effort (Apple + Google) is standardising *mandatory* detectability for BLE beacons. An app that rotates identifiers to hide risks being flagged by phones as an "unknown tracker travelling with you" — actively harming the users it is meant to protect.
 
 ---
 
