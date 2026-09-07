@@ -374,10 +374,14 @@ struct ChatPrivateConversationCoordinatorContextTests {
     }
 
     /// A name token is whitespace-free and bounded, but it still renders inside
-    /// the trusted `system` line — so a URL in a slot becomes a tappable link
-    /// under system styling (@Chessing234 on #1662/#1699), and a unicode
-    /// separator / bidi mark reorders the visible text. Both must degrade to a
-    /// plain message under the sender's own name.
+    /// the trusted `system` line, so a unicode separator or bidi mark reorders
+    /// the visible text there (@Chessing234 on #1662/#1699). The URL half of
+    /// the check is defense in depth, not a live tappable link: the formatter's
+    /// link-detection loop sits inside its `sender != "system"` branch and the
+    /// else branch that draws system lines attaches no link attributes — the
+    /// check exists so a later formatter change can't quietly make one
+    /// tappable. Both classes degrade to a plain message under the sender's own
+    /// name.
     @Test @MainActor
     func processActionMessage_rejectsLinkAndSeparatorPayloadsInSlots() async {
         let context = MockChatPrivateConversationContext()
@@ -399,10 +403,11 @@ struct ChatPrivateConversationCoordinatorContextTests {
         #expect(processed("* bob took a screenshot http://evil.tld *", sender: "bob").sender == "bob")
         // URL smuggled through the ACTOR nickname too.
         #expect(processed("* https://evil.tld took a screenshot *", sender: "https://evil.tld").sender == "https://evil.tld")
-        // Unicode bidi mark (U+202E right-to-left override) in the slot.
+        // Unicode bidi mark (U+202E right-to-left override) in the slot — this
+        // is the case a plain `Character.isWhitespace` scan actually missed.
         #expect(processed("* 🫂 bob hugs a\u{202E}b *").sender == "bob")
-        // Non-breaking space (U+00A0) — not Swift `isWhitespace`-caught by the
-        // old check, but a separator all the same.
+        // Non-breaking space (U+00A0). Swift's `isWhitespace` already matched
+        // this one on the base; it's kept as a regression guard.
         #expect(processed("* 🫂 bob hugs a\u{00A0}b *").sender == "bob")
 
         // Legitimate shapes still render as system actions.
@@ -412,10 +417,12 @@ struct ChatPrivateConversationCoordinatorContextTests {
     }
 
     /// The target slot rejects free text, but the ACTOR slot is the peer's own
-    /// self-chosen nickname — and `InputValidator.validateUserString` accepts
-    /// any non-control characters up to 50, spaces included. So the preamble
-    /// the target slot now refuses can simply be moved into the nickname, and
-    /// the line still lands in the formatter's trusted "system" styling.
+    /// self-chosen nickname, and nothing upstream bounds what arrives on the
+    /// wire: `InputValidator.validateNickname` is only reached from ReadReceipt
+    /// decoding, announce nicknames are merely NFC-normalized, and content is
+    /// merely trimmed. So the preamble the target slot now refuses can simply
+    /// be moved into the nickname, and the line still lands in the formatter's
+    /// trusted "system" styling — unless the token check catches it here.
     @Test @MainActor
     func processActionMessage_rejectsPreambleSmuggledIntoTheActorNickname() async {
         let context = MockChatPrivateConversationContext()
@@ -462,6 +469,71 @@ struct ChatPrivateConversationCoordinatorContextTests {
         #expect(processed("* \(longLegitNick) took a screenshot *", sender: longLegitNick).sender == "system")
         #expect(processed("* 🫂 \(longLegitNick) hugs you *", sender: longLegitNick).sender == "system")
         #expect(processed("* 🐟 \(longLegitNick) slaps you around a bit with a large trout *", sender: longLegitNick).sender == "system")
+    }
+
+    /// A blank-rendering scalar is neither whitespace nor a control character,
+    /// so the old set-membership check waved it through (Codex on #1699): every
+    /// gap in `SECURITY:⠀session⠀expired,⠀re-verify⠀at⠀evil` is U+2800 braille
+    /// pattern blank, which reads as a sentence but passes as a single token
+    /// and lands in the trusted "system" styling. The scalar rule is by category now, so
+    /// hangul fillers and private-use scalars fall the same way — while names
+    /// carrying combining marks keep rendering.
+    @Test @MainActor
+    func processActionMessage_rejectsBlankRenderingScalarsInSlots() async {
+        let context = MockChatPrivateConversationContext()
+        let coordinator = ChatPrivateConversationCoordinator(context: context)
+
+        func processed(_ content: String, sender: String = "bob") -> BitchatMessage {
+            coordinator.processActionMessage(
+                BitchatMessage(id: UUID().uuidString, sender: sender, content: content,
+                               timestamp: Date(), isRelay: false)
+            )
+        }
+
+        // The reported payload, verbatim: U+2800 in every gap.
+        let brailleBlank = "\u{2800}"
+        let hostileNick = [
+            "SECURITY:", "session", "expired,", "re-verify", "at", "evil"
+        ].joined(separator: brailleBlank)
+        // Inside the 50-char actor bound, so the rejection has to come from the
+        // scalar rule rather than the length check.
+        #expect(hostileNick.count <= InputValidator.Limits.maxNicknameLength)
+
+        // All three action templates, each a peer speaking as itself.
+        #expect(processed("* \(hostileNick) took a screenshot *", sender: hostileNick).sender == hostileNick)
+        #expect(processed("* 🫂 \(hostileNick) hugs you *", sender: hostileNick).sender == hostileNick)
+        #expect(
+            processed(
+                "* 🐟 \(hostileNick) slaps you around a bit with a large trout *",
+                sender: hostileNick
+            ).sender == hostileNick
+        )
+        // Same scalar in the target slot.
+        #expect(processed("* 🫂 bob hugs SECURITY:\(brailleBlank)verify\(brailleBlank)at\(brailleBlank)evil *").sender == "bob")
+
+        // U+3164 hangul filler is category Lo, not a separator — only its
+        // default-ignorable property gives it away. Well inside the 32-char
+        // target bound, so again the scalar rule is what rejects it.
+        let hangulFiller = "\u{3164}"
+        let fillerTarget = "SECURITY:\(hangulFiller)reset\(hangulFiller)keys"
+        #expect(fillerTarget.count <= 32)
+        #expect(processed("* 🫂 bob hugs \(fillerTarget) *").sender == "bob")
+
+        // Private-use scalars render as whatever the font decides, including
+        // nothing at all.
+        #expect(processed("* 🫂 bob hugs a\u{E000}b *").sender == "bob")
+
+        // Nonspacing combining marks are NOT blanks: Persian and Arabic names
+        // carry harakat and must keep rendering as system actions.
+        let harakatName = "\u{0645}\u{062D}\u{0645}\u{0651}\u{062F}"  // محمّد, with a U+0651 shadda
+        #expect(processed("* \(harakatName) took a screenshot *", sender: harakatName).sender == "system")
+        #expect(processed("* 🫂 bob hugs \(harakatName) *").sender == "system")
+
+        // A plain emoji nickname (no variation selector) is a symbol, not a
+        // blank.
+        let emojiNick = "\u{1F389}"  // 🎉
+        #expect(processed("* \(emojiNick) took a screenshot *", sender: emojiNick).sender == "system")
+        #expect(processed("* 🫂 bob hugs \(emojiNick) *").sender == "system")
     }
 
     @Test @MainActor

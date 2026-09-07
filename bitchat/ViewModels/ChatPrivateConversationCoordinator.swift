@@ -839,10 +839,12 @@ final class ChatPrivateConversationCoordinator {
         let senderBase = message.sender.splitSuffix().0
         // The actor slot needs the same constraint as the target slot, and for
         // the same reason. Anchoring to the wire sender stops a peer acting as
-        // someone else, but the sender is a *self-chosen nickname* and
-        // `InputValidator.validateUserString` accepts any non-control
-        // characters — spaces included — so the preamble the target slot
-        // rejects can simply be moved into the name:
+        // someone else, but the sender is a *self-chosen nickname* that nothing
+        // upstream bounds: `InputValidator.validateNickname` is only ever
+        // reached from ReadReceipt decoding, inbound announce nicknames are
+        // merely NFC-normalized, and inbound content is merely trimmed. So the
+        // token check has to carry the whole constraint itself — otherwise the
+        // preamble the target slot rejects simply moves into the name:
         // nickname `SECURITY: session expired, re-verify at evil` sending
         // `* SECURITY: session expired, re-verify at evil took a screenshot *`
         // is a peer speaking as itself, and lands in the trusted styling.
@@ -898,29 +900,61 @@ final class ChatPrivateConversationCoordinator {
     /// rendering.
     ///
     /// "No Swift whitespace" is not enough (thanks @Chessing234): the token is
-    /// still rendered inside the trusted `system` line, where a unicode
-    /// separator or bidi mark reorders visible text, and where the formatter
-    /// turns a URL into a tappable link. So reject two classes:
+    /// still rendered inside the trusted `system` line, where anything without
+    /// a visible glyph reads as a word gap and lets free text pose as one name.
+    /// So reject two classes:
     ///
-    /// 1. Unicode whitespace and separators, plus control/format characters
-    ///    (bidi marks, zero-width joiners) — a plain "no Swift whitespace"
-    ///    check misses these.
+    /// 1. Scalars that render as nothing — see `rendersAsBlank`.
     /// 2. Anything the formatter would linkify. Its gate is exactly
     ///    `contains("://") || contains("www.") || contains("http")`
-    ///    (ChatMessageFormatter), so `https://evil.tld` *and* `www.evil.tld`
-    ///    both slip a tappable link into the trusted line. Match that gate.
+    ///    (ChatMessageFormatter). That loop is *inside* the formatter's
+    ///    `sender != "system"` branch and the else branch that draws system
+    ///    lines attaches no link attributes, so no link is tappable here
+    ///    today; matching the gate is defense in depth against a formatter
+    ///    change that starts linkifying system content, not a live fix.
     ///
     /// A real action still renders — handleEmote only ever emits a resolved
     /// nickname (optionally `#abcd`-suffixed, left intact) or "you", none of
-    /// which trip either class. An attacker's URL/bidi payload falls through
-    /// to a plain message under the sender's own name.
+    /// which trip either class. An attacker's blank-scalar/URL payload falls
+    /// through to a plain message under the sender's own name.
     static func isNameToken(_ token: String, maxLength: Int = 32) -> Bool {
         if token == "you" { return true }
         guard !token.isEmpty, token.count <= maxLength else { return false }
-        let separators = CharacterSet.whitespacesAndNewlines.union(.controlCharacters)
-        guard token.unicodeScalars.allSatisfy({ !separators.contains($0) }) else { return false }
+        guard token.unicodeScalars.allSatisfy({ !rendersAsBlank($0) }) else { return false }
         let lower = token.lowercased()
         return !lower.contains("://") && !lower.contains("www.") && !lower.contains("http")
+    }
+
+    /// Blank-rendering scalars that fall in none of the rejected categories and
+    /// are not default-ignorable, so only naming them catches them.
+    private static let blankRenderingScalars: Set<Unicode.Scalar> = [
+        "\u{2800}",   // braille pattern blank
+        "\u{FFFC}",   // object replacement character
+        "\u{FFFD}",   // replacement character
+        "\u{1D159}"   // musical symbol null notehead
+    ]
+
+    /// Why a per-scalar category grammar and not the old
+    /// `whitespacesAndNewlines ∪ controlCharacters` set test: set membership
+    /// only ever covered separators and control/format characters, and
+    /// blank-rendering scalars outside those categories (U+2800, U+3164) went
+    /// on smuggling readable free text into a line drawn with trusted system
+    /// styling.
+    ///
+    /// Nonspacing and enclosing combining marks are deliberately absent:
+    /// Persian and Arabic names carry harakat and must keep rendering.
+    private static func rendersAsBlank(_ scalar: Unicode.Scalar) -> Bool {
+        switch scalar.properties.generalCategory {
+        case .spaceSeparator, .lineSeparator, .paragraphSeparator,
+             .control, .format, .surrogate, .privateUse, .unassigned:
+            return true
+        default:
+            break
+        }
+        // Catches the hangul fillers (U+3164, U+115F, U+1160, U+FFA0) and the
+        // variation selectors, which are letters and marks by category.
+        if scalar.properties.isDefaultIgnorableCodePoint { return true }
+        return blankRenderingScalars.contains(scalar)
     }
 
     func migratePrivateChatsIfNeeded(for peerID: PeerID, senderNickname: String) {
