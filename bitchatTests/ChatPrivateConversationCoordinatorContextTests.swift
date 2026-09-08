@@ -536,6 +536,55 @@ struct ChatPrivateConversationCoordinatorContextTests {
         #expect(processed("* 🫂 bob hugs \(emojiNick) *").sender == "system")
     }
 
+    /// Persian writes compounds with the half-space, U+200C ZERO WIDTH
+    /// NON-JOINER: `علی\u{200C}رضا`, `می\u{200C}رود`. It is category Cf, so the
+    /// blank-scalar rule rejected it and those names stopped rendering as
+    /// actions — a cost carried only by Persian and Arabic speakers. Unlike the
+    /// invisible scalars that rule exists to stop, the joiner renders: a
+    /// visible half-space in Arabic script, nothing at all in Latin, where it
+    /// cannot fake a word boundary. That makes it no stronger than the hyphen
+    /// and colon this check has always allowed, so it is admitted in its
+    /// orthographic position — between two letters, at most twice — and
+    /// nowhere else.
+    @Test @MainActor
+    func processActionMessage_allowsPersianHalfSpaceButNotSentencesBuiltFromIt() async {
+        let context = MockChatPrivateConversationContext()
+        let coordinator = ChatPrivateConversationCoordinator(context: context)
+
+        func processed(_ content: String, sender: String = "bob") -> BitchatMessage {
+            coordinator.processActionMessage(
+                BitchatMessage(id: UUID().uuidString, sender: sender, content: content,
+                               timestamp: Date(), isRelay: false)
+            )
+        }
+
+        let zwnj = "\u{200C}"
+
+        // Real names must render as system actions, in both slots.
+        for name in ["علی\(zwnj)رضا", "می\(zwnj)رود", "امیر\(zwnj)حسین", "علی\(zwnj)رضا\(zwnj)پور"] {
+            #expect(processed("* \(name) took a screenshot *", sender: name).sender == "system")
+            #expect(processed("* 🫂 bob hugs \(name) *").sender == "system")
+        }
+        // A joiner after a harakat is still between two letters to a reader.
+        let harakat = "\u{0645}\u{062D}\u{0645}\u{0651}\u{062F}\(zwnj)\u{0631}\u{0636}\u{0627}"
+        #expect(processed("* \(harakat) took a screenshot *", sender: harakat).sender == "system")
+
+        // A sentence built out of joiners is not a name: three or more gaps.
+        let sentence = "امنیت\(zwnj)جلسه\(zwnj)منقضی\(zwnj)شد"
+        #expect(processed("* \(sentence) took a screenshot *", sender: sentence).sender == sentence)
+        #expect(processed("* 🫂 bob hugs \(sentence) *").sender == "bob")
+
+        // Nor is a gap opened next to anything that is not a letter.
+        for shape in ["امنیت:\(zwnj)جلسه", "\(zwnj)امنیت", "امنیت\(zwnj)", "ab1\(zwnj)2cd"] {
+            #expect(processed("* 🫂 bob hugs \(shape) *").sender == "bob")
+        }
+
+        // The exception is U+200C alone — every other invisible scalar stays out.
+        #expect(processed("* 🫂 bob hugs a\u{200B}b *").sender == "bob")
+        #expect(processed("* 🫂 bob hugs a\u{200D}b *").sender == "bob")
+        #expect(processed("* 🫂 bob hugs a\u{2800}b *").sender == "bob")
+    }
+
     @Test @MainActor
     func addMessageToPrivateChats_upsertsByIdAndSanitizes() async {
         let context = MockChatPrivateConversationContext()

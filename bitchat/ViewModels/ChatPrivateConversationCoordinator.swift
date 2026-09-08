@@ -904,7 +904,9 @@ final class ChatPrivateConversationCoordinator {
     /// a visible glyph reads as a word gap and lets free text pose as one name.
     /// So reject two classes:
     ///
-    /// 1. Scalars that render as nothing — see `rendersAsBlank`.
+    /// 1. Scalars that render as nothing — see `rendersAsBlank`. The one
+    ///    exception is U+200C, allowed in its orthographic position only; see
+    ///    `hasOrthographicJoinerUseOnly` for why it is not in the same class.
     /// 2. Anything the formatter would linkify. Its gate is exactly
     ///    `contains("://") || contains("www.") || contains("http")`
     ///    (ChatMessageFormatter). That loop is *inside* the formatter's
@@ -920,9 +922,59 @@ final class ChatPrivateConversationCoordinator {
     static func isNameToken(_ token: String, maxLength: Int = 32) -> Bool {
         if token == "you" { return true }
         guard !token.isEmpty, token.count <= maxLength else { return false }
-        guard token.unicodeScalars.allSatisfy({ !rendersAsBlank($0) }) else { return false }
+        guard hasOrthographicJoinerUseOnly(token) else { return false }
+        guard token.unicodeScalars.allSatisfy({ $0 == Self.zeroWidthNonJoiner || !rendersAsBlank($0) })
+        else { return false }
         let lower = token.lowercased()
         return !lower.contains("://") && !lower.contains("www.") && !lower.contains("http")
+    }
+
+    /// U+200C ZERO WIDTH NON-JOINER — Persian's نیم‌فاصله (half-space).
+    private static let zeroWidthNonJoiner: Unicode.Scalar = "\u{200C}"
+
+    /// Persian compounds need one, occasionally two (`علی‌رضا‌پور`). Three or
+    /// more is not a name, it is a sentence wearing one.
+    private static let maxJoinersInName = 2
+
+    /// U+200C is category Cf, so `rendersAsBlank` rejects it with the rest of
+    /// the format characters — which silently stopped Persian names written
+    /// with the half-space (`علی‌رضا`, `می‌رود`) from rendering as actions.
+    /// That is a real cost borne only by Persian and Arabic speakers, and it
+    /// buys less than it looks: unlike the invisible scalars this check exists
+    /// to stop, the joiner *renders* — as a visible half-space gap in Arabic
+    /// script, and as nothing at all in Latin, where it cannot fake a word
+    /// boundary. As an attack tool it is therefore no stronger than the hyphen,
+    /// dot and colon this check has always allowed.
+    ///
+    /// So allow it, but only where the orthography actually puts it: between
+    /// two letters, at most `maxJoinersInName` times. That admits the names
+    /// while denying the shapes an attacker wants — a leading or trailing gap,
+    /// a gap after punctuation (`امنیت:‌جلسه…`), and any run long enough to
+    /// stack several words into one token.
+    private static func hasOrthographicJoinerUseOnly(_ token: String) -> Bool {
+        let scalars = Array(token.unicodeScalars)
+        var joiners = 0
+        for (index, scalar) in scalars.enumerated() where scalar == zeroWidthNonJoiner {
+            joiners += 1
+            guard joiners <= maxJoinersInName,
+                  index > 0, index + 1 < scalars.count,
+                  isLetterLike(scalars[index - 1]), isLetterLike(scalars[index + 1])
+            else { return false }
+        }
+        return true
+    }
+
+    /// Letters, plus the combining marks that ride on them — a joiner sitting
+    /// after a harakat is still between two letters as far as the reader is
+    /// concerned.
+    private static func isLetterLike(_ scalar: Unicode.Scalar) -> Bool {
+        switch scalar.properties.generalCategory {
+        case .lowercaseLetter, .uppercaseLetter, .titlecaseLetter,
+             .modifierLetter, .otherLetter, .nonspacingMark, .spacingMark:
+            return true
+        default:
+            return false
+        }
     }
 
     /// Blank-rendering scalars that fall in none of the rejected categories and
