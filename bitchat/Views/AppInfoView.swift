@@ -313,8 +313,8 @@ struct AppInfoView: View {
                 AppInfoFeatureInfo(
                     id: "sensitive.panic",
                     icon: "flame",
-                    resolvedTitle: String(localized: "app_info.sensitive.panic.title", defaultValue: "panic wipe is local and instant", comment: "Guide entry title: the panic wipe erases local data immediately"),
-                    resolvedDescription: String(localized: "app_info.sensitive.panic.body", defaultValue: "triple-tap the bitchat/ logo to wipe with no confirmation (settings has a confirmed version). it erases messages, keys, identity, favorites, blocks, and location on this device — but media clears a moment later in the background, so keep the app open briefly. it can't recall anything already sent, doesn't shred forensically, and leaves any icloud/finder backups untouched.", comment: "Guide entry body explaining what the panic wipe does and its limits")
+                    resolvedTitle: String(localized: "app_info.sensitive.panic.title", defaultValue: "panic wipe is local and irreversible", comment: "Guide entry title: the panic wipe erases local data and cannot be undone"),
+                    resolvedDescription: String(localized: "app_info.sensitive.panic.body", defaultValue: "triple-tap the bitchat/ logo, then confirm — settings has the same button. it erases messages, media, keys, identity, favorites, blocks, and location on this device before it returns; a system message means it worked, a red \"wipe incomplete\" banner means quit and reopen to retry. it can't recall anything already sent, doesn't shred forensically, and leaves any icloud/finder backups untouched.", comment: "Guide entry body explaining what the panic wipe does and its limits")
                 ),
                 AppInfoFeatureInfo(
                     id: "sensitive.help",
