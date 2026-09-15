@@ -97172,6 +97172,378 @@
           }
         }
       }
+    },
+    "fingerprint.badge.verified_renamed" : {
+      "comment" : "Fingerprint sheet badge when this key is still verified but now announces a different nickname than the one it was verified under. Keeps VERIFIED on purpose: the key really is verified; only the self-chosen name changed.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚠️ مُتحقق، تغيّر اللقب"
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚠️ যাচাইকৃত, ডাকনাম বদলেছে"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚠️ VERIFIZIERT, NICKNAME GEÄNDERT"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚠️ VERIFIED, NAME CHANGED"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚠️ VERIFICADO, APODO CAMBIADO"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚠️ تأییدشده، نام مستعار تغییر کرده"
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚠️ BERIPIKADO, NAGBAGO ANG PALAYAW"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚠️ VÉRIFIÉ, PSEUDO CHANGÉ"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚠️ מאומת, הכינוי השתנה"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚠️ सत्यापित, उपनाम बदल गया"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚠️ TERVERIFIKASI, NAMA PANGGILAN BERUBAH"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚠️ VERIFICATO, NICKNAME CAMBIATO"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚠️ 検証済み（ニックネーム変更あり）"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚠️ 인증됨, 닉네임 변경됨"
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚠️ TERVERIFIKASI, NAMA SAMARAN BERUBAH"
+          }
+        },
+        "ne" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚠️ प्रमाणित, उपनाम बदलिएको"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚠️ GEVERIFICEERD, BIJNAAM VERANDERD"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚠️ ZWERYFIKOWANE, NICK ZMIENIONY"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚠️ VERIFICADO, ALCUNHA ALTERADA"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚠️ VERIFICADO, APELIDO MUDOU"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚠️ ПРОВЕРЕНО, НИК ИЗМЕНИЛСЯ"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚠️ VERIFIERAD, SMEKNAMN ÄNDRAT"
+          }
+        },
+        "ta" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚠️ சரிபார்க்கப்பட்டது, புனைபெயர் மாறியது"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚠️ ยืนยันแล้ว แต่ชื่อเปลี่ยน"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚠️ DOĞRULANDI, TAKMA ADI DEĞİŞTİ"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚠️ ПЕРЕВІРЕНО, НІК ЗМІНИВСЯ"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚠️ تصدیق شدہ، عرفی نام بدل گیا"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚠️ ĐÃ XÁC THỰC, BIỆT DANH ĐÃ ĐỔI"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚠️ 已验证，昵称已变更"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚠️ 已驗證，暱稱已變更"
+          }
+        }
+      }
+    },
+    "fingerprint.message.verified_renamed" : {
+      "comment" : "Fingerprint sheet message for a verified key that now announces a different nickname. %@ is the nickname the key was verified under (the old name). States that the key has not changed, only the name it presents.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لقد تحققت من هذا المفتاح عندما كان لقبه '%@'. أما الآن فيظهر بلقب مختلف. لم يتغيّر المفتاح؛ ما تغيّر هو اللقب الذي يظهر به."
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "আপনি এই কী-টি যাচাই করার সময় এর ডাকনাম ছিল '%@'। এটি এখন ভিন্ন একটি ডাকনাম ব্যবহার করছে। কী-টি বদলায়নি; এর ডাকনাম বদলেছে।"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "du hast diesen schlüssel verifiziert, als er den nickname '%@' hatte. jetzt sendet er einen anderen nickname. der schlüssel hat sich nicht geändert; der nickname, den er sendet, schon."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "you verified this key as '%@'. it now announces a different name. the key has not changed; the name it presents has."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "verificaste esta clave cuando usaba el apodo '%@'. ahora anuncia uno distinto. la clave no ha cambiado; el apodo que muestra, sí."
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "این کلید هویت وقتی تأییدش کردید، نام مستعار «%@» را اعلام می‌کرد. اکنون نام مستعار دیگری اعلام می‌کند. خود کلید تغییر نکرده است؛ نام مستعار اعلام‌شده تغییر کرده است."
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "na-beripika mo ang key na ito noong '%@' ang palayaw nito. ibang palayaw ang ina-announce nito ngayon. hindi nagbago ang key; ang palayaw na ipinapakita nito ang nagbago."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "tu as vérifié cette clé quand elle portait le pseudo '%@'. elle diffuse maintenant un autre pseudo. la clé n'a pas changé ; c'est le pseudo diffusé qui a changé."
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "אימתת את המפתח הזה בתור '%@'. הוא מצהיר כעת על כינוי אחר. המפתח לא השתנה; הכינוי שהוא מציג השתנה."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "आपने यह कुंजी तब सत्यापित की जब इसका उपनाम '%@' था। अब यह एक अलग उपनाम बताती है। कुंजी नहीं बदली है; इसका बताया हुआ उपनाम बदल गया है।"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "kamu sudah memverifikasi kunci ini saat nama panggilannya '%@'. sekarang kunci ini menyiarkan nama panggilan yang berbeda. kuncinya tidak berubah; yang berubah adalah nama yang disiarkannya."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "hai verificato questa chiave quando il suo nickname era '%@'. ora ne trasmette uno diverso. la chiave non è cambiata; è cambiato il nickname che trasmette."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "この鍵は、ニックネームが '%@' だったときに検証しました。現在、この鍵から別のニックネームが発信されています。鍵に変更はなく、変更があったのはニックネームのほうです。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이 키를 인증할 당시 이 키는 '%@' 닉네임을 사용했습니다. 이 키는 이제 다른 닉네임을 사용합니다. 키는 변경되지 않았고, 변경된 것은 닉네임입니다."
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "kamu sudah memverifikasi kunci ini sebagai '%@'. kini kunci ini memaparkan nama yang berlainan. kunci ini tidak berubah; yang berubah ialah nama yang ditunjukkannya."
+          }
+        },
+        "ne" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "तिमीले यो कुञ्जी प्रमाणित गर्दा यसको उपनाम '%@' थियो। अहिले यसले फरक उपनाम देखाइरहेको छ। कुञ्जी बदलिएको छैन; यसले देखाउने उपनाम बदलिएको छ।"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "je hebt deze sleutel geverifieerd toen die de bijnaam '%@' gebruikte. nu gebruikt die een andere bijnaam. de sleutel is niet veranderd; de bijnaam wel."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "zweryfikowałeś ten klucz, gdy rozgłaszał nick '%@'. teraz rozgłasza inny nick. klucz się nie zmienił; zmienił się jego deklarowany nick."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "verificaste esta chave quando estava associada à alcunha '%@'. agora a alcunha anunciada é outra. a chave não se alterou; a alcunha, sim."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "quando você verificou essa chave, ela anunciava o apelido '%@'. agora anuncia outro. a chave não mudou; o apelido, sim."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ты подтвердил этот ключ, когда у него был ник «%@». теперь в его анонсах другой ник. ключ не изменился — изменился заявленный ник."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "du verifierade den här nyckeln när den hade smeknamnet '%@'. nu anger den ett annat smeknamn. nyckeln har inte ändrats; det är smeknamnet den anger som har ändrats."
+          }
+        },
+        "ta" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "இந்த அடையாள விசைக்கு '%@' என்ற புனைபெயர் இருந்தபோது நீங்கள் அதைச் சரிபார்த்தீர்கள். அது இப்போது வேறு புனைபெயரைக் காட்டுகிறது. விசை மாறவில்லை; அது கூறும் புனைபெயர் மாறியுள்ளது."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ตอนที่คุณยืนยัน คีย์นี้ใช้ชื่อ '%@' ตอนนี้ใช้ชื่ออื่นแล้ว ตัวคีย์ไม่ได้เปลี่ยน แต่ชื่อที่ใช้เปลี่ยนไป"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "bu anahtarı doğruladığınızda takma adı '%@' idi. artık farklı bir takma adla görünüyor. anahtar değişmedi; kullandığı takma ad değişti."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ти перевірив цей ключ, коли з ним надходив нік '%@'. тепер із ним надходить інший нік. ключ не змінився — змінився нік."
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "آپ نے اس کلید کی تصدیق اس وقت کی تھی جب اس کا عرفی نام '%@' تھا۔ اب یہ کلید ایک مختلف عرفی نام نشر کر رہی ہے۔ کلید نہیں بدلی؛ وہ عرفی نام بدل گیا ہے جو یہ نشر کرتی ہے۔"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "bạn đã xác thực khóa này khi nó mang biệt danh '%@'. khóa này giờ mang một biệt danh khác. khóa không đổi; biệt danh nó mang thì đã đổi."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你验证此密钥时，它的昵称是 '%@'。它现在广播的是另一个昵称。密钥没有变更；变更的是它所用的昵称。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你驗證此金鑰時，它的暱稱是「%@」。它現在宣告的暱稱不同了。金鑰沒有變更，變更的是暱稱。"
+          }
+        }
+      }
     }
   },
   "version" : "1.1"
